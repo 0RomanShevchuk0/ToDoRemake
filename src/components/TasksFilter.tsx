@@ -1,15 +1,15 @@
 import { FC } from "react"
 import classNames from "classnames"
-import { FilterType } from "./TodoList"
+import { TasksFilterType } from "./TodoList"
 import styles from "../styles/ToDoList.module.scss"
 
-type FilterPropsType = {
-  f: FilterType
-  filter: FilterType
-  setFilter: (filter: FilterType) => void
+type TasksFilterPropsType = {
+  f: TasksFilterType
+  filter: TasksFilterType
+  setFilter: (filter: TasksFilterType) => void
 }
 
-const Filter: FC<FilterPropsType> = ({ f, filter, setFilter }) => {
+const TasksFilter: FC<TasksFilterPropsType> = ({ f, filter, setFilter }) => {
   return (
     <span
       onClick={() => setFilter(f)}
@@ -22,4 +22,4 @@ const Filter: FC<FilterPropsType> = ({ f, filter, setFilter }) => {
   )
 }
 
-export default Filter
+export default TasksFilter

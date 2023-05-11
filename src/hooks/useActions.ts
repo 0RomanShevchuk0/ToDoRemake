@@ -4,13 +4,13 @@ import { useDispatch } from "react-redux"
 import { ToDoLists } from "../redux/TodoLists.slice"
 
 const rootActions = {
-	...ToDoLists.actions
+  ...ToDoLists.actions,
 }
 
 export const useActions = () => {
-	const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
-	return useMemo(() => {
-		return bindActionCreators(rootActions, dispatch)
-	}, [dispatch])
+  return useMemo(() => {
+    return bindActionCreators(rootActions, dispatch)
+  }, [dispatch])
 }

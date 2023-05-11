@@ -1,21 +1,23 @@
 import { ChangeEvent, FC, KeyboardEvent, useState } from "react"
 import { useActions } from "../hooks/useActions"
-import Task from "./task"
-import styles from "../styles/ToDoList.module.scss"
-import Filter from "./Filter"
 import { IToDoList } from "../types/ToDoListTypes"
+import styles from "../styles/ToDoList.module.scss"
+import Task from "./task"
+import Filter from "./TasksFilter"
+import AddTask from "./AddTask"
+import ListHeader from "./ListHeader"
 
-export type FilterType = "All" | "Active" | "Completed"
+export type TasksFilterType = "All" | "Active" | "Completed"
 
-
-const TodoList: FC<IToDoList> = ({id, tasks, title}) => {
+const TodoList: FC<IToDoList> = ({ id, tasks, title }) => {
   const { addTask } = useActions()
 
   const [taskName, setTaskName] = useState("")
   const [error, setError] = useState<null | string>(null)
-  const [filter, setFilter] = useState<FilterType>("All")
+  const [filter, setFilter] = useState<TasksFilterType>("All")
+  const [isAddTaskVisible, setIsAddTaskVisible] = useState(false)
 
-  const filters: FilterType[] = ["All", "Active", "Completed"]
+  const filters: TasksFilterType[] = ["All", "Active", "Completed"]
   const filterElements = filters.map((f, i) => (
     <Filter key={i} f={f} filter={filter} setFilter={setFilter} />
   ))
@@ -36,40 +38,41 @@ const TodoList: FC<IToDoList> = ({id, tasks, title}) => {
 
   function handleAddTask() {
     if (taskName.trim() !== "") {
-      addTask({name: taskName.trim(), listId: id})
+      addTask({ name: taskName.trim(), listId: id })
       setTaskName("")
     } else {
       setError("Title can't be empty")
       setTaskName("")
     }
   }
-  function handleTitleChange(e: ChangeEvent<HTMLInputElement>) {
+  function handleNameChange(e: ChangeEvent<HTMLTextAreaElement>) {
     setError(null)
     setTaskName(e.target.value)
-  }
-	function handleKeyPress(e: KeyboardEvent<HTMLInputElement>) {
-		if(e.code === 'Enter') {
-			handleAddTask()
-		}
 	}
+  function handleKeyPress(e: KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.code === "Enter") {
+      handleAddTask()
+    } else if (e.code === "Escape") {
+      setIsAddTaskVisible(false)
+    }
+  }
 
   return (
     <section className={styles.toDoList}>
-      <h3 className={styles.title}>{title}</h3>
-      <>
-        <input
-          className={error ? styles.inputError : ""}
-          type="text"
-          value={taskName}
-          onChange={handleTitleChange}
-					onKeyDown={handleKeyPress}
-        />
-        <button onClick={handleAddTask}>+</button>
-      </>
-      {error && <div className={styles.errorMessage}>{error}</div>}
+      <ListHeader id={id} title={title} />
 
-      <div className={styles.tasks}>{taskItems}</div>
       <div className={styles.filters}>{filterElements}</div>
+      <div className={styles.tasks}>{taskItems}</div>
+
+      <AddTask
+        error={error}
+        isAddTaskVisible={isAddTaskVisible}
+        setIsAddTaskVisible={setIsAddTaskVisible}
+        taskName={taskName}
+        handleNameChange={handleNameChange}
+        handleAddTask={handleAddTask}
+        handleKeyPress={handleKeyPress}
+      />
     </section>
   )
 }

@@ -1,6 +1,7 @@
 import { FC } from "react"
 import { useActions } from "../hooks/useActions"
 import { ITask } from "../types/ToDoListTypes"
+import styles from "../styles/Task.module.scss"
 
 interface TaskPropsType extends Omit<ITask, "id"> {
   listId: string
@@ -11,7 +12,7 @@ const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
   const { toggleIsDone, deleteTask } = useActions()
 
   return (
-    <div key={taskId}>
+    <div key={taskId} className={styles.task}>
       <label>
         <input
           type="checkbox"

@@ -1,0 +1,10 @@
+@use "./variables" as v;
+
+.task {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-radius: 12px;
+	background-color: v.$secondary-color;
+	padding: 20px 8px;
+}
