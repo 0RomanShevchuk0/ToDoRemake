@@ -1,6 +1,6 @@
 export interface IToDoList {
   id: string
-  title: string
+  name: string
   tasks: ITask[]
 }
 

@@ -10,7 +10,7 @@ const initialState: InitialStateType = {
   lists: [
     {
       id: v1(),
-      title: "Products list",
+      name: "Products list",
       tasks: [
         {
           id: v1(),
@@ -31,7 +31,7 @@ const initialState: InitialStateType = {
     },
     {
       id: v1(),
-      title: "Stack",
+      name: "Stack",
       tasks: [
         {
           id: v1(),
@@ -68,12 +68,25 @@ export const ToDoLists = createSlice({
   initialState,
   reducers: {
     //* Lists
+		addList(state, action: PayloadAction<string>) {
+			const newList: IToDoList = {
+				id: v1(),
+				name: action.payload,
+				tasks: []
+			}
+			state.lists.push(newList)
+		},
     deleteList(state, action: PayloadAction<string>) {
       state.lists = state.lists.filter((l) => l.id !== action.payload)
     },
+		changeTitle(state, action: PayloadAction<{id: string, newName: string}>) {
+			const currentList = state.lists.find(l => l.id === action.payload.id)
+			if(currentList) {
+				currentList.name = action.payload.newName
+			}
+		},
 
     //* Tasks
-
     addTask(state, action: PayloadAction<{ name: string; listId: string }>) {
       const newTask: ITask = {
         id: v1(),
@@ -103,6 +116,7 @@ export const ToDoLists = createSlice({
   },
 })
 
-export const { deleteList, addTask, deleteTask, toggleIsDone } = ToDoLists.actions
+export const { addList, deleteList, changeTitle,
+	addTask, deleteTask, toggleIsDone } = ToDoLists.actions
 
 export default ToDoLists.reducer

@@ -1,5 +1,4 @@
-import { ChangeEvent, FC, KeyboardEvent, useState } from "react"
-import { useActions } from "../hooks/useActions"
+import { FC, useState } from "react"
 import { IToDoList } from "../types/ToDoListTypes"
 import styles from "../styles/ToDoList.module.scss"
 import Task from "./task"
@@ -9,13 +8,8 @@ import ListHeader from "./ListHeader"
 
 export type TasksFilterType = "All" | "Active" | "Completed"
 
-const TodoList: FC<IToDoList> = ({ id, tasks, title }) => {
-  const { addTask } = useActions()
-
-  const [taskName, setTaskName] = useState("")
-  const [error, setError] = useState<null | string>(null)
+const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
   const [filter, setFilter] = useState<TasksFilterType>("All")
-  const [isAddTaskVisible, setIsAddTaskVisible] = useState(false)
 
   const filters: TasksFilterType[] = ["All", "Active", "Completed"]
   const filterElements = filters.map((f, i) => (
@@ -36,43 +30,14 @@ const TodoList: FC<IToDoList> = ({ id, tasks, title }) => {
     <Task key={t.id} listId={id} taskId={t.id} name={t.name} isDone={t.isDone} />
   ))
 
-  function handleAddTask() {
-    if (taskName.trim() !== "") {
-      addTask({ name: taskName.trim(), listId: id })
-      setTaskName("")
-    } else {
-      setError("Title can't be empty")
-      setTaskName("")
-    }
-  }
-  function handleNameChange(e: ChangeEvent<HTMLTextAreaElement>) {
-    setError(null)
-    setTaskName(e.target.value)
-	}
-  function handleKeyPress(e: KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.code === "Enter") {
-      handleAddTask()
-    } else if (e.code === "Escape") {
-      setIsAddTaskVisible(false)
-    }
-  }
-
   return (
     <section className={styles.toDoList}>
-      <ListHeader id={id} title={title} />
+      <ListHeader id={id} name={name} />
 
       <div className={styles.filters}>{filterElements}</div>
       <div className={styles.tasks}>{taskItems}</div>
 
-      <AddTask
-        error={error}
-        isAddTaskVisible={isAddTaskVisible}
-        setIsAddTaskVisible={setIsAddTaskVisible}
-        taskName={taskName}
-        handleNameChange={handleNameChange}
-        handleAddTask={handleAddTask}
-        handleKeyPress={handleKeyPress}
-      />
+      <AddTask id={id} />
     </section>
   )
 }

@@ -1,3 +1,6 @@
+@use "./variables" as v;
+
+
 .header {
 	position: fixed;
 	top: 0;
@@ -9,4 +12,10 @@
 	align-items: center;
 	padding: 0px 20px;
 	background: rgb(0, 0, 0, 0.6);
+
+	button {
+		background-color: v.$button-color;
+		color: v.$background
+	}
 }
+

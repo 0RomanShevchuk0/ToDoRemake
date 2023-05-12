@@ -1,26 +1,34 @@
-import { ChangeEvent, FC, KeyboardEvent } from "react"
+import { ChangeEvent, FC, useState } from "react"
 import classNames from "classnames"
 import styles from "../styles/ToDoList.module.scss"
+import { useActions } from "../hooks/useActions"
+import onKeyDownActions from "../utils/onKeyDownEvents"
 
-type AddTaskPropsType = {
-  isAddTaskVisible: boolean
-  error: string | null
-  taskName: string
-  handleNameChange: (e: ChangeEvent<HTMLTextAreaElement>) => void
-  handleKeyPress: (e: KeyboardEvent<HTMLTextAreaElement>) => void
-  handleAddTask: () => void
-  setIsAddTaskVisible: (isVisible: boolean) => void
-}
+const AddTask: FC<{ id: string }> = ({ id }) => {
+  const { addTask } = useActions()
+  const [taskName, setTaskName] = useState("")
+  const [error, setError] = useState<null | string>(null)
+  const [isAddTaskVisible, setIsAddTaskVisible] = useState(false)
 
-const AddTask: FC<AddTaskPropsType> = ({
-  isAddTaskVisible,
-  error,
-  taskName,
-  handleNameChange,
-  handleKeyPress,
-  handleAddTask,
-  setIsAddTaskVisible,
-}) => {
+  function handleAddTask() {
+    if (taskName.trim() !== "") {
+      addTask({ name: taskName.trim(), listId: id })
+      setTaskName("")
+    } else {
+      setError("Title can't be empty")
+      setTaskName("")
+    }
+  }
+  function handleCancel() {
+    setTaskName("")
+    setIsAddTaskVisible(false)
+  }
+  function handleNameChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    setError(null)
+    setTaskName(e.target.value)
+  }
+  const handleKeyDown = onKeyDownActions(handleAddTask, handleCancel)
+
   return (
     <>
       {isAddTaskVisible ? (
@@ -33,13 +41,13 @@ const AddTask: FC<AddTaskPropsType> = ({
             }
             value={taskName}
             onChange={handleNameChange}
-            onKeyDown={handleKeyPress}
+            onKeyDown={handleKeyDown}
             placeholder="Enter a title for this task"
           />
           {error && <div className={styles.errorMessage}>{error}</div>}
           <button onClick={handleAddTask}>Add task</button>
           <button
-            onClick={() => setIsAddTaskVisible(false)}
+            onClick={handleCancel}
             className="button-without-background x-mark"
           >
             x

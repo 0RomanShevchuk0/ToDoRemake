@@ -6,14 +6,15 @@ import styles from "./styles/app.module.scss"
 import TodoList from "./components/TodoList"
 import Header from "./components/Header"
 import classNames from "classnames"
+import AddList from "./components/AddList"
 
 const App: FC = () => {
   const toDoLists = useSelector((state: RootStateType) => state.ToDoLists)
   const toDoListElements = toDoLists.lists.map((l: IToDoList) => (
-    <TodoList key={l.id} id={l.id} tasks={l.tasks} title={l.title} />
+    <TodoList key={l.id} id={l.id} tasks={l.tasks} name={l.name} />
   ))
 
-  const [isGrid, setIsGrid] = useState<boolean>(false)
+  const [isGrid, setIsGrid] = useState<boolean>(true)
 
   return (
     <div className={styles.app}>
@@ -27,9 +28,7 @@ const App: FC = () => {
           }
         >
           {toDoListElements}
-          <div>
-            <input type="text" />
-          </div>
+          <AddList />
         </div>
       </main>
     </div>

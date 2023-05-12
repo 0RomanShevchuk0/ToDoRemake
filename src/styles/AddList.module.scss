@@ -1,0 +1,61 @@
+@use "./variables" as v;
+
+.addList {
+	cursor: pointer;
+	width: 23rem;
+	font-size: 1.4rem;
+	padding: 12px;
+	border-radius: 12px;
+	box-sizing: border-box;
+	background-color: v.$button-color;
+	color: v.$background;
+	position: relative;
+
+	.addListPopUp {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		background-color: #fff;
+		border-radius: 12px;
+		padding: 12px;
+
+		.popUpHeader {
+			display: flex;
+			justify-content: space-between;
+			border-bottom: 1px solid v.$background;
+
+			.closeButton {
+				font-size: 18px;
+				color: v.$background;
+				background: none;
+				border: none;
+			}
+		}
+
+		.nameInput {
+			width: 80%;
+			font-size: 1.2rem;
+			padding: 4px 12px;
+			margin: 4px 0px;
+			color: v.$background;
+			box-sizing: border-box;
+			border-radius: 6px;
+			background: none;
+			outline: none;
+		}
+
+		.addButton {
+			width: 6em;
+			font-size: 1rem;
+			padding: 0.4em 0;
+			background-color: rgb(18, 159, 18);
+			border-radius: 6px;
+			border: none;
+			outline: none;
+		}
+	}
+}
