@@ -11,10 +11,37 @@
 }
 
 .header {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	margin: 0 0 20px 0;
+
+	.optionsPopUp {
+		position: absolute;
+		top: 0;
+		right: 0;
+		background-color: v.$secondary-color;
+		border-radius: 6px;
+
+		ul {
+			border-radius: 6px;
+
+			margin: 0px 0px;
+			padding: 0px 0px;
+		}
+		li {
+			cursor: pointer;
+			list-style: none;
+			padding: 2px 0px;
+			padding: 6px 20px;
+			border-radius: 6px;
+
+			&:hover {
+				background-color: rgb(102, 95, 95);
+			}
+		}
+	}
 }
 
 .title {
@@ -57,4 +84,11 @@
 	padding: 10px 10px;
 	box-sizing: border-box;
 	border-radius: 12px;
+}
+
+.buttons {
+	margin-top: 6px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }

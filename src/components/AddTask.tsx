@@ -3,6 +3,7 @@ import classNames from "classnames"
 import styles from "../styles/ToDoList.module.scss"
 import { useActions } from "../hooks/useActions"
 import onKeyDownActions from "../utils/onKeyDownEvents"
+import { HiOutlineX } from "react-icons/hi"
 
 const AddTask: FC<{ id: string }> = ({ id }) => {
   const { addTask } = useActions()
@@ -45,13 +46,15 @@ const AddTask: FC<{ id: string }> = ({ id }) => {
             placeholder="Enter a title for this task"
           />
           {error && <div className={styles.errorMessage}>{error}</div>}
-          <button onClick={handleAddTask}>Add task</button>
-          <button
-            onClick={handleCancel}
-            className="button-without-background x-mark"
-          >
-            x
-          </button>
+          <div className={styles.buttons}>
+            <button onClick={handleAddTask}>Add task</button>
+            <button
+              onClick={handleCancel}
+              className="button-without-background x-mark"
+            >
+              <HiOutlineX />
+            </button>
+          </div>
         </>
       ) : (
         <button

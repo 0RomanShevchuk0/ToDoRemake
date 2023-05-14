@@ -3,7 +3,7 @@ import { v1 } from "uuid"
 import { ITask, IToDoList } from "../types/ToDoListTypes"
 
 type InitialStateType = {
-	lists: IToDoList[]
+  lists: IToDoList[]
 }
 
 const initialState: InitialStateType = {
@@ -68,23 +68,23 @@ export const ToDoLists = createSlice({
   initialState,
   reducers: {
     //* Lists
-		addList(state, action: PayloadAction<string>) {
-			const newList: IToDoList = {
-				id: v1(),
-				name: action.payload,
-				tasks: []
-			}
-			state.lists.push(newList)
-		},
+    addList(state, action: PayloadAction<string>) {
+      const newList: IToDoList = {
+        id: v1(),
+        name: action.payload,
+        tasks: [],
+      }
+      state.lists.push(newList)
+    },
     deleteList(state, action: PayloadAction<string>) {
       state.lists = state.lists.filter((l) => l.id !== action.payload)
     },
-		changeTitle(state, action: PayloadAction<{id: string, newName: string}>) {
-			const currentList = state.lists.find(l => l.id === action.payload.id)
-			if(currentList) {
-				currentList.name = action.payload.newName
-			}
-		},
+    changeTitle(state, action: PayloadAction<{ id: string; newName: string }>) {
+      const currentList = state.lists.find((l) => l.id === action.payload.id)
+      if (currentList) {
+        currentList.name = action.payload.newName
+      }
+    },
 
     //* Tasks
     addTask(state, action: PayloadAction<{ name: string; listId: string }>) {
@@ -113,10 +113,46 @@ export const ToDoLists = createSlice({
         taskToChange.isDone = !taskToChange.isDone
       }
     },
+    moveTask(
+      state,
+      action: PayloadAction<{
+        listId: string
+        taskId: string
+        destination: { listId: string; taskId: string }
+      }>
+    ) {
+      const currentList = state.lists.find((l) => l.id === action.payload.listId)
+      const currentTask = currentList?.tasks.find(
+        (t) => t.id === action.payload.taskId
+      )
+      const destinationList = state.lists.find(
+        (l) => l.id === action.payload.destination.listId
+      )
+      const destinationTask = destinationList?.tasks.find(
+        (t) => t.id === action.payload.destination.taskId
+      )
+      if (currentList && destinationTask && currentTask) {
+        currentList.tasks = currentList?.tasks.filter(
+          (t) => t.id !== action.payload.taskId
+        )
+
+        const destination = destinationList?.tasks.indexOf(destinationTask)
+        if (destination !== undefined) {
+          destinationList?.tasks.splice(destination, 0, currentTask)
+        }
+      }
+    },
   },
 })
 
-export const { addList, deleteList, changeTitle,
-	addTask, deleteTask, toggleIsDone } = ToDoLists.actions
+export const {
+  addList,
+  deleteList,
+  changeTitle,
+  addTask,
+  deleteTask,
+  toggleIsDone,
+  moveTask,
+} = ToDoLists.actions
 
 export default ToDoLists.reducer

@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { DragEvent, DragEventHandler, FC } from "react"
 import { useActions } from "../hooks/useActions"
 import { ITask } from "../types/ToDoListTypes"
 import styles from "../styles/Task.module.scss"
@@ -9,10 +9,33 @@ interface TaskPropsType extends Omit<ITask, "id"> {
 }
 
 const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
-  const { toggleIsDone, deleteTask } = useActions()
+  const { toggleIsDone, deleteTask, moveTask } = useActions()
+
+  function handleDragStart(e: DragEvent<HTMLDivElement>) {
+    e.dataTransfer.setData("movingTask", JSON.stringify({ listId, taskId }))
+  }
+  function handleDrop(e: DragEvent<HTMLDivElement>) {
+    type DataType = {
+      listId: string
+      taskId: string
+    }
+    const data: DataType = JSON.parse(e.dataTransfer.getData("movingTask"))
+    moveTask({
+      listId: data.listId,
+      taskId: data.taskId,
+      destination: { listId, taskId },
+    })
+  }
 
   return (
-    <div key={taskId} className={styles.task}>
+    <div
+      key={taskId}
+      className={styles.task}
+      draggable={true}
+      onDragStart={handleDragStart}
+      onDrop={handleDrop}
+      onDragOver={(e) => e.preventDefault()}
+    >
       <label>
         <input
           type="checkbox"
