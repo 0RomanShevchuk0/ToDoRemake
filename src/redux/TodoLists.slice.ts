@@ -113,6 +113,20 @@ export const ToDoLists = createSlice({
         taskToChange.isDone = !taskToChange.isDone
       }
     },
+
+    //* Moving
+    moveList(state, action: PayloadAction<{ id: string; destinationId: string }>) {
+      const currentList = state.lists.find((l) => l.id === action.payload.id)
+      const destinationList = state.lists.find(
+        (l) => l.id === action.payload.destinationId
+      )
+      if (currentList && destinationList) {
+        const destination = state.lists.indexOf(destinationList)
+
+        state.lists = state.lists.filter((l) => l.id !== action.payload.id)
+        state.lists.splice(destination, 0, currentList)
+      }
+    },
     moveTask(
       state,
       action: PayloadAction<{
@@ -132,11 +146,12 @@ export const ToDoLists = createSlice({
         (t) => t.id === action.payload.destination.taskId
       )
       if (currentList && destinationTask && currentTask) {
+        const destination = destinationList?.tasks.indexOf(destinationTask)
+
         currentList.tasks = currentList?.tasks.filter(
           (t) => t.id !== action.payload.taskId
         )
 
-        const destination = destinationList?.tasks.indexOf(destinationTask)
         if (destination !== undefined) {
           destinationList?.tasks.splice(destination, 0, currentTask)
         }
@@ -153,6 +168,7 @@ export const {
   deleteTask,
   toggleIsDone,
   moveTask,
+  moveList,
 } = ToDoLists.actions
 
 export default ToDoLists.reducer

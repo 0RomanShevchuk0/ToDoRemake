@@ -1,4 +1,4 @@
-import { DragEvent, DragEventHandler, FC } from "react"
+import { DragEvent, FC } from "react"
 import { useActions } from "../hooks/useActions"
 import { ITask } from "../types/ToDoListTypes"
 import styles from "../styles/Task.module.scss"
