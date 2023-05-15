@@ -1,4 +1,4 @@
-import { FC, useState } from "react"
+import { FC, LegacyRef, RefObject, useEffect, useRef, useState } from "react"
 import { useActions } from "../hooks/useActions"
 import styles from "../styles/ToDoList.module.scss"
 import { SlOptions } from "react-icons/sl"
@@ -10,15 +10,19 @@ type ListHeaderPropType = {
 
 const ListHeader: FC<ListHeaderPropType> = ({ name, id }) => {
   const { deleteList } = useActions()
-
   const [isOptionsPopUpVisible, setIsOptionsPopUpVisible] = useState(false)
+  const headerRef = useRef<any>()
 
-  function handleDeleteList() {
-    deleteList(id)
-  }
+  useEffect(() => {
+    if (isOptionsPopUpVisible) {
+      headerRef.current.addEventListener("click", () =>
+        setIsOptionsPopUpVisible(false)
+      )
+    }
+  }, [isOptionsPopUpVisible])
 
   return (
-    <div className={styles.header}>
+    <div className={styles.header} ref={headerRef}>
       <h3 className={styles.title}>{name}</h3>
       <button
         className="button-without-background x-mark"
@@ -29,7 +33,7 @@ const ListHeader: FC<ListHeaderPropType> = ({ name, id }) => {
       {isOptionsPopUpVisible && (
         <div className={styles.optionsPopUp}>
           <ul>
-            <li onClick={handleDeleteList}>Delete list</li>
+            <li onClick={() => deleteList(id)}>Delete list</li>
           </ul>
         </div>
       )}

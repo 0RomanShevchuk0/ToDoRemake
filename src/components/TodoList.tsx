@@ -48,10 +48,8 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
       className={styles.toDoList}
     >
       <ListHeader id={id} name={name} />
-
       <div className={styles.filters}>{filterElements}</div>
       <div className={styles.tasks}>{taskItems}</div>
-
       <AddTask id={id} />
     </section>
   )

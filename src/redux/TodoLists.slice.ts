@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice, createStore, PayloadAction } from "@reduxjs/toolkit"
 import { v1 } from "uuid"
 import { ITask, IToDoList } from "../types/ToDoListTypes"
 
@@ -120,6 +120,7 @@ export const ToDoLists = createSlice({
       const destinationList = state.lists.find(
         (l) => l.id === action.payload.destinationId
       )
+			
       if (currentList && destinationList) {
         const destination = state.lists.indexOf(destinationList)
 
