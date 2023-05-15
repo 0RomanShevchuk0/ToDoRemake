@@ -1,7 +1,7 @@
 import { DragEvent, FC, useState } from "react"
 import { IToDoList } from "../types/ToDoListTypes"
 import styles from "../styles/ToDoList.module.scss"
-import Task from "./task"
+import Task from "./Task"
 import Filter from "./TasksFilter"
 import AddTask from "./AddTask"
 import ListHeader from "./ListHeader"
