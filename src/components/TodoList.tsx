@@ -34,7 +34,7 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
   function handleDragStart(e: DragEvent<HTMLDivElement>) {
     e.dataTransfer.setData("movingList", id)
   }
-  function handleDrop(e: DragEvent<HTMLDivElement>) {
+  function handleListDrop(e: DragEvent<HTMLDivElement>) {
     const data = e.dataTransfer.getData("movingList")
     moveList({ id: data, destinationId: id })
   }
@@ -45,7 +45,7 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
         draggable={true}
         onDragStart={handleDragStart}
         onDragOver={(e) => e.preventDefault()}
-        onDrop={handleDrop}
+        onDrop={handleListDrop}
       >
         <ListHeader id={id} name={name} />
       </div>
