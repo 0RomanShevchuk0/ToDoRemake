@@ -14,17 +14,6 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
 
   const listRef = useRef() as MutableRefObject<HTMLDivElement>
   const [isOptionsPopUpVisible, setIsOptionsPopUpVisible] = useState(false)
-  useEffect(() => {
-    function hideDelete(e: any) {
-      if (isOptionsPopUpVisible && e.target.tagName !== "LI") {
-        setIsOptionsPopUpVisible(false)
-      }
-    }
-    listRef.current.addEventListener("click", hideDelete)
-
-    return () =>
-      listRef.current && listRef.current.removeEventListener("click", hideDelete)
-  }, [isOptionsPopUpVisible])
 
 	const [filter, setFilter] = useState<TasksFilterType>("All")
   const filters: TasksFilterType[] = ["All", "Active", "Completed"]
@@ -41,7 +30,6 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
         return t.isDone
     }
   })
-	
   const taskItems = filteredTasks.map((t) => (
     <Task key={t.id} listId={id} taskId={t.id} name={t.name} isDone={t.isDone} />
   ))
@@ -65,6 +53,7 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
         <ListHeader
           id={id}
           name={name}
+					listRef={listRef}
           isOptionsPopUpVisible={isOptionsPopUpVisible}
           setIsOptionsPopUpVisible={setIsOptionsPopUpVisible}
         />

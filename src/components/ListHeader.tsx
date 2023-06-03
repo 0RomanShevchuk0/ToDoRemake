@@ -1,4 +1,4 @@
-import { FC, MutableRefObject, useEffect, useRef, useState } from "react"
+import { FC, MutableRefObject, useEffect } from "react"
 import { useActions } from "../hooks/useActions"
 import styles from "../styles/ToDoList.module.scss"
 import { SlOptions } from "react-icons/sl"
@@ -6,6 +6,7 @@ import { SlOptions } from "react-icons/sl"
 type ListHeaderPropType = {
   name: string
   id: string
+	listRef: MutableRefObject<HTMLDivElement>
   isOptionsPopUpVisible: boolean
   setIsOptionsPopUpVisible: (isVisible: boolean) => void
 }
@@ -15,8 +16,21 @@ const ListHeader: FC<ListHeaderPropType> = ({
   id,
   isOptionsPopUpVisible,
   setIsOptionsPopUpVisible,
+	listRef
 }) => {
   const { deleteList } = useActions()
+
+	useEffect(() => {
+    function hideDelete(e: any) {
+      if (isOptionsPopUpVisible && e.target.tagName !== "LI") {
+        setIsOptionsPopUpVisible(false)
+      }
+    }
+    listRef.current.addEventListener("click", hideDelete)
+
+    return () =>
+      listRef.current && listRef.current.removeEventListener("click", hideDelete)
+  }, [isOptionsPopUpVisible])
 
   return (
     <div className={styles.header}>
@@ -30,8 +44,6 @@ const ListHeader: FC<ListHeaderPropType> = ({
       {isOptionsPopUpVisible && (
         <div className={styles.optionsPopUp}>
           <ul>
-            <li onClick={() => deleteList(id)}>Delete list</li>
-            <li onClick={() => deleteList(id)}>Delete list</li>
             <li onClick={() => deleteList(id)}>Delete list</li>
           </ul>
         </div>
