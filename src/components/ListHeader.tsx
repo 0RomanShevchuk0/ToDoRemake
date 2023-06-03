@@ -6,26 +6,20 @@ import { SlOptions } from "react-icons/sl"
 type ListHeaderPropType = {
   name: string
   id: string
+  isOptionsPopUpVisible: boolean
+  setIsOptionsPopUpVisible: (isVisible: boolean) => void
 }
 
-const ListHeader: FC<ListHeaderPropType> = ({ name, id }) => {
+const ListHeader: FC<ListHeaderPropType> = ({
+  name,
+  id,
+  isOptionsPopUpVisible,
+  setIsOptionsPopUpVisible,
+}) => {
   const { deleteList } = useActions()
-  const [isOptionsPopUpVisible, setIsOptionsPopUpVisible] = useState(false)
-  const headerRef = useRef() as MutableRefObject<HTMLDivElement>
-
-  useEffect(() => {
-    function hideDelete(e: any) {
-      if (isOptionsPopUpVisible && e.target.tagName !== "LI") {
-        setIsOptionsPopUpVisible(false)
-      }
-    }
-    headerRef.current.addEventListener("click", hideDelete)
-
-    return () => headerRef.current && headerRef.current.removeEventListener("click", hideDelete)
-  }, [isOptionsPopUpVisible])
 
   return (
-    <div className={styles.header} ref={headerRef}>
+    <div className={styles.header}>
       <h3 className={styles.title}>{name}</h3>
       <button
         className="button-without-background x-mark"
@@ -36,6 +30,8 @@ const ListHeader: FC<ListHeaderPropType> = ({ name, id }) => {
       {isOptionsPopUpVisible && (
         <div className={styles.optionsPopUp}>
           <ul>
+            <li onClick={() => deleteList(id)}>Delete list</li>
+            <li onClick={() => deleteList(id)}>Delete list</li>
             <li onClick={() => deleteList(id)}>Delete list</li>
           </ul>
         </div>

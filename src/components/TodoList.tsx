@@ -1,4 +1,4 @@
-import { DragEvent, FC, useState } from "react"
+import { DragEvent, FC, MutableRefObject, useEffect, useRef, useState } from "react"
 import { IToDoList } from "../types/ToDoListTypes"
 import styles from "../styles/ToDoList.module.scss"
 import Task from "./Task"
@@ -11,9 +11,23 @@ export type TasksFilterType = "All" | "Active" | "Completed"
 
 const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
   const { moveList } = useActions()
-  const [filter, setFilter] = useState<TasksFilterType>("All")
-  const filters: TasksFilterType[] = ["All", "Active", "Completed"]
 
+  const listRef = useRef() as MutableRefObject<HTMLDivElement>
+  const [isOptionsPopUpVisible, setIsOptionsPopUpVisible] = useState(false)
+  useEffect(() => {
+    function hideDelete(e: any) {
+      if (isOptionsPopUpVisible && e.target.tagName !== "LI") {
+        setIsOptionsPopUpVisible(false)
+      }
+    }
+    listRef.current.addEventListener("click", hideDelete)
+
+    return () =>
+      listRef.current && listRef.current.removeEventListener("click", hideDelete)
+  }, [isOptionsPopUpVisible])
+
+	const [filter, setFilter] = useState<TasksFilterType>("All")
+  const filters: TasksFilterType[] = ["All", "Active", "Completed"]
   const filterElements = filters.map((f, i) => (
     <Filter key={i} f={f} filter={filter} setFilter={setFilter} />
   ))
@@ -27,6 +41,7 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
         return t.isDone
     }
   })
+	
   const taskItems = filteredTasks.map((t) => (
     <Task key={t.id} listId={id} taskId={t.id} name={t.name} isDone={t.isDone} />
   ))
@@ -40,14 +55,19 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
   }
 
   return (
-    <section className={styles.toDoList}>
+    <section className={styles.toDoList} ref={listRef}>
       <div
         draggable={true}
         onDragStart={handleDragStart}
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleListDrop}
       >
-        <ListHeader id={id} name={name} />
+        <ListHeader
+          id={id}
+          name={name}
+          isOptionsPopUpVisible={isOptionsPopUpVisible}
+          setIsOptionsPopUpVisible={setIsOptionsPopUpVisible}
+        />
       </div>
       <div className={styles.filters}>{filterElements}</div>
       <div className={styles.tasks}>{taskItems}</div>
