@@ -1,4 +1,4 @@
-import { DragEvent, FC, MutableRefObject, useEffect, useRef, useState } from "react"
+import { DragEvent, FC, MutableRefObject, useRef, useState } from "react"
 import { IToDoList } from "../types/ToDoListTypes"
 import styles from "../styles/ToDoList.module.scss"
 import Task from "./Task"

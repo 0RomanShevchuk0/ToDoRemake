@@ -1,7 +1,7 @@
 import { DragEvent, FC } from "react"
 import { useActions } from "../hooks/useActions"
-import { ITask } from "../types/ToDoListTypes"
 import styles from "../styles/Task.module.scss"
+import { ITask } from "../types/ToDoListTypes"
 
 interface TaskPropsType extends Omit<ITask, "id"> {
   listId: string
