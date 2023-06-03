@@ -57,12 +57,12 @@ const AddTask: FC<{ id: string }> = ({ id }) => {
           </div>
         </>
       ) : (
-        <button
+        <div
           className="button-without-background"
           onClick={() => setIsAddTaskVisible(true)}
         >
           +Add task...
-        </button>
+        </div>
       )}
     </>
   )

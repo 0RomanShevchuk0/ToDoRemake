@@ -60,6 +60,69 @@ const initialState: InitialStateType = {
         },
       ],
     },
+    {
+      id: v1(),
+      name: "Grocery list",
+      tasks: [
+        {
+          id: v1(),
+          name: "Buy eggs",
+          isDone: false,
+        },
+        {
+          id: v1(),
+          name: "Buy vegetables",
+          isDone: false,
+        },
+        {
+          id: v1(),
+          name: "Buy pasta",
+          isDone: true,
+        },
+      ],
+    },
+    {
+      id: v1(),
+      name: "Household chores",
+      tasks: [
+        {
+          id: v1(),
+          name: "Clean the kitchen",
+          isDone: false,
+        },
+        {
+          id: v1(),
+          name: "Do laundry",
+          isDone: false,
+        },
+        {
+          id: v1(),
+          name: "Mow the lawn",
+          isDone: true,
+        },
+      ],
+    },
+    {
+      id: v1(),
+      name: "Work tasks",
+      tasks: [
+        {
+          id: v1(),
+          name: "Prepare presentation",
+          isDone: false,
+        },
+        {
+          id: v1(),
+          name: "Reply to emails",
+          isDone: false,
+        },
+        {
+          id: v1(),
+          name: "Submit reports",
+          isDone: true,
+        },
+      ],
+    },
   ],
 }
 
@@ -120,7 +183,7 @@ export const ToDoLists = createSlice({
       const destinationList = state.lists.find(
         (l) => l.id === action.payload.destinationId
       )
-			
+
       if (currentList && destinationList) {
         const destination = state.lists.indexOf(destinationList)
 
@@ -147,8 +210,10 @@ export const ToDoLists = createSlice({
         (t) => t.id === action.payload.destination.taskId
       )
       if (currentList && destinationTask && currentTask) {
-        const destination = destinationList?.tasks.indexOf(destinationTask)
-
+        const destination =
+          destinationList?.tasks.length !== 0
+            ? destinationList?.tasks.indexOf(destinationTask)
+            : 0
         currentList.tasks = currentList?.tasks.filter(
           (t) => t.id !== action.payload.taskId
         )

@@ -40,14 +40,15 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
   }
 
   return (
-    <section
-      draggable={true}
-      onDragStart={handleDragStart}
-      onDragOver={(e) => e.preventDefault()}
-      onDrop={handleDrop}
-      className={styles.toDoList}
-    >
-      <ListHeader id={id} name={name} />
+    <section className={styles.toDoList}>
+      <div
+        draggable={true}
+        onDragStart={handleDragStart}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={handleDrop}
+      >
+        <ListHeader id={id} name={name} />
+      </div>
       <div className={styles.filters}>{filterElements}</div>
       <div className={styles.tasks}>{taskItems}</div>
       <AddTask id={id} />

@@ -1,4 +1,4 @@
-import { FC, LegacyRef, RefObject, useEffect, useRef, useState } from "react"
+import { FC, MutableRefObject, useEffect, useRef, useState } from "react"
 import { useActions } from "../hooks/useActions"
 import styles from "../styles/ToDoList.module.scss"
 import { SlOptions } from "react-icons/sl"
@@ -11,14 +11,17 @@ type ListHeaderPropType = {
 const ListHeader: FC<ListHeaderPropType> = ({ name, id }) => {
   const { deleteList } = useActions()
   const [isOptionsPopUpVisible, setIsOptionsPopUpVisible] = useState(false)
-  const headerRef = useRef<any>()
+  const headerRef = useRef() as MutableRefObject<HTMLDivElement>
 
   useEffect(() => {
-    if (isOptionsPopUpVisible) {
-      headerRef.current.addEventListener("click", () =>
+    function hideDelete(e: any) {
+      if (isOptionsPopUpVisible && e.target.tagName !== "LI") {
         setIsOptionsPopUpVisible(false)
-      )
+      }
     }
+    headerRef.current.addEventListener("click", hideDelete)
+
+    return () => headerRef.current && headerRef.current.removeEventListener("click", hideDelete)
   }, [isOptionsPopUpVisible])
 
   return (

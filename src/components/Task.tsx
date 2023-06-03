@@ -14,7 +14,7 @@ const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
   function handleDragStart(e: DragEvent<HTMLDivElement>) {
     e.dataTransfer.setData("movingTask", JSON.stringify({ listId, taskId }))
   }
-  function handleDrop(e: DragEvent<HTMLDivElement>) {
+  function handleTaskDrop(e: DragEvent<HTMLDivElement>) {
     type DataType = {
       listId: string
       taskId: string
@@ -33,8 +33,8 @@ const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
       className={styles.task}
       draggable={true}
       onDragStart={handleDragStart}
-      onDrop={handleDrop}
       onDragOver={(e) => e.preventDefault()}
+      onDrop={handleTaskDrop}
     >
       <label>
         <input
