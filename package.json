@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://0romanshevchuk0.github.io/ToDoRemake /",
+  "homepage": "https://0romanshevchuk0.github.io/ToDoRemake/",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

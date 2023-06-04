@@ -210,10 +210,7 @@ export const ToDoLists = createSlice({
         (t) => t.id === action.payload.destination.taskId
       )
       if (currentList && destinationTask && currentTask) {
-        const destination =
-          destinationList?.tasks.length !== 0
-            ? destinationList?.tasks.indexOf(destinationTask)
-            : 0
+        const destination = destinationList?.tasks.indexOf(destinationTask)
         currentList.tasks = currentList?.tasks.filter(
           (t) => t.id !== action.payload.taskId
         )
