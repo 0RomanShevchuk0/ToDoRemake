@@ -1,5 +1,7 @@
 import { DragEvent, FC } from "react"
+import { useSelector } from "react-redux"
 import { useActions } from "../hooks/useActions"
+import { RootStateType } from "../redux/store"
 import styles from "../styles/Task.module.scss"
 import { ITask } from "../types/ToDoListTypes"
 
@@ -9,33 +11,49 @@ interface TaskPropsType extends Omit<ITask, "id"> {
 }
 
 const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
-  const { toggleIsDone, deleteTask, moveTask } = useActions()
+  const listStart = useSelector(
+    (state: RootStateType) => state.DraggingState.listStart
+  )
+  const taskStart = useSelector(
+    (state: RootStateType) => state.DraggingState.taskStart
+  )
+  const { toggleIsDone, deleteTask, moveTask, setListStart, setTaskStart } =
+    useActions()
 
-  function handleDragStart(e: DragEvent<HTMLDivElement>) {
-    e.dataTransfer.setData("movingTask", JSON.stringify({ listId, taskId }))
+  function handleTaskDragStart() {
+		setListStart(listId)
+    setTaskStart(taskId)
   }
-  function handleTaskDrop(e: DragEvent<HTMLDivElement>) {
-    type DataType = {
-      listId: string
-      taskId: string
+  function handleTaskDragEnter() {
+    if (listStart && taskStart) {
+      moveTask({
+        listStartId: listStart,
+        taskStartId: taskStart,
+        destination: { listId, taskId },
+      })
     }
-    const data: DataType = JSON.parse(e.dataTransfer.getData("movingTask"))
-    moveTask({
-      listId: data.listId,
-      taskId: data.taskId,
-      destination: { listId, taskId },
-    })
+  }
+  function handleTaskDragEnd() {
+		debugger
+		setListStart(null)
+    setTaskStart(null)
   }
 
   return (
     <div
       key={taskId}
       className={styles.task}
-			// onDrag={(e) => console.log(e.target.closest(`.${styles.task}`))}
+      // onDrag={(e) => console.log(e.target.closest(`.${styles.task}`))}
+      // draggable={true}
+      // onDragStart={handleDragStart}
+      // onDragOver={(e) => e.preventDefault()}
+      // onDrop={handleTaskDrop}
+
       draggable={true}
-      onDragStart={handleDragStart}
       onDragOver={(e) => e.preventDefault()}
-      onDrop={handleTaskDrop}
+      onDragStart={handleTaskDragStart}
+      onDragEnter={handleTaskDragEnter}
+      onDragEnd={handleTaskDragEnd}
     >
       <label>
         <input

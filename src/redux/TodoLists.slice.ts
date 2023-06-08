@@ -193,14 +193,14 @@ export const ToDoLists = createSlice({
     moveTask(
       state,
       action: PayloadAction<{
-        listId: string
-        taskId: string
+        listStartId: string
+        taskStartId: string
         destination: { listId: string; taskId: string }
       }>
     ) {
-      const currentList = state.lists.find((l) => l.id === action.payload.listId)
-      const currentTask = currentList?.tasks.find(
-        (t) => t.id === action.payload.taskId
+      const startList = state.lists.find((l) => l.id === action.payload.listStartId)
+      const startTask = startList?.tasks.find(
+        (t) => t.id === action.payload.taskStartId
       )
       const destinationList = state.lists.find(
         (l) => l.id === action.payload.destination.listId
@@ -208,14 +208,14 @@ export const ToDoLists = createSlice({
       const destinationTask = destinationList?.tasks.find(
         (t) => t.id === action.payload.destination.taskId
       )
-      if (currentList && destinationTask && currentTask) {
+      if (startList && destinationTask && startTask) {
         const destination = destinationList?.tasks.indexOf(destinationTask)
-        currentList.tasks = currentList?.tasks.filter(
-          (t) => t.id !== action.payload.taskId
+        startList.tasks = startList?.tasks.filter(
+          (t) => t.id !== action.payload.taskStartId
         )
 
         if (destination !== undefined) {
-          destinationList?.tasks.splice(destination, 0, currentTask)
+          destinationList?.tasks.splice(destination, 0, startTask)
         }
       }
     },
