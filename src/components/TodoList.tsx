@@ -1,4 +1,4 @@
-import { DragEvent, FC, MutableRefObject, useRef, useState } from "react"
+import { FC, MutableRefObject, useRef, useState } from "react"
 import { IToDoList } from "../types/ToDoListTypes"
 import styles from "../styles/ToDoList.module.scss"
 import Task from "./Task"
@@ -41,11 +41,11 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
     setListStart(id)
   }
 	function handleListDragEnter() {
-		if (listStart !== id && listStart && id !== "") {
+		if (listStart !== id && listStart) {
 			moveList({ startId: listStart, destinationId: id })
 		}
 	}
-  function handleListDrop() {
+  function handleListDragEnd() {
     setListStart(null)
   }
 
@@ -56,7 +56,7 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
         onDragOver={(e) => e.preventDefault()}
         onDragStart={handleListDragStart}
         onDragEnter={handleListDragEnter}
-        onDrop={handleListDrop}
+        onDragEnd={handleListDragEnd}
       >
         <ListHeader
           id={id}
