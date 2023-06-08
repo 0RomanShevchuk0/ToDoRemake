@@ -31,6 +31,7 @@ const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
     <div
       key={taskId}
       className={styles.task}
+			// onDrag={(e) => console.log(e.target.closest(`.${styles.task}`))}
       draggable={true}
       onDragStart={handleDragStart}
       onDragOver={(e) => e.preventDefault()}

@@ -1,9 +1,9 @@
-import { createSlice, createStore, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { v1 } from "uuid"
 import { ITask, IToDoList } from "../types/ToDoListTypes"
 
 type InitialStateType = {
-  lists: IToDoList[]
+  lists: IToDoList[],
 }
 
 const initialState: InitialStateType = {
@@ -178,17 +178,16 @@ export const ToDoLists = createSlice({
     },
 
     //* Moving
-    moveList(state, action: PayloadAction<{ id: string; destinationId: string }>) {
-      const currentList = state.lists.find((l) => l.id === action.payload.id)
+    moveList(state, action: PayloadAction<{ startId: string; destinationId: string }>) {
+      const startList = state.lists.find((l) => l.id === action.payload.startId)
       const destinationList = state.lists.find(
         (l) => l.id === action.payload.destinationId
       )
-
-      if (currentList && destinationList) {
+      if (startList && destinationList && startList.id !== destinationList.id) {
         const destination = state.lists.indexOf(destinationList)
 
-        state.lists = state.lists.filter((l) => l.id !== action.payload.id)
-        state.lists.splice(destination, 0, currentList)
+        state.lists = state.lists.filter((l) => l.id !== action.payload.startId)
+        state.lists.splice(destination, 0, startList)
       }
     },
     moveTask(

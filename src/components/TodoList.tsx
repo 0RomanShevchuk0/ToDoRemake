@@ -6,16 +6,19 @@ import Filter from "./TasksFilter"
 import AddTask from "./AddTask"
 import ListHeader from "./ListHeader"
 import { useActions } from "../hooks/useActions"
+import { useSelector } from "react-redux"
+import { RootStateType } from "../redux/store"
 
 export type TasksFilterType = "All" | "Active" | "Completed"
 
 const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
-  const { moveList } = useActions()
+  const listStart = useSelector((state: RootStateType) => state.DraggingState.listStart)
+  const { moveList, setListStart } = useActions()
 
   const listRef = useRef() as MutableRefObject<HTMLDivElement>
   const [isOptionsPopUpVisible, setIsOptionsPopUpVisible] = useState(false)
 
-	const [filter, setFilter] = useState<TasksFilterType>("All")
+  const [filter, setFilter] = useState<TasksFilterType>("All")
   const filters: TasksFilterType[] = ["All", "Active", "Completed"]
   const filterElements = filters.map((f, i) => (
     <Filter key={i} f={f} filter={filter} setFilter={setFilter} />
@@ -34,26 +37,31 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
     <Task key={t.id} listId={id} taskId={t.id} name={t.name} isDone={t.isDone} />
   ))
 
-  function handleDragStart(e: DragEvent<HTMLDivElement>) {
-    e.dataTransfer.setData("movingList", id)
+  function handleListDragStart() {
+    setListStart(id)
   }
-  function handleListDrop(e: DragEvent<HTMLDivElement>) {
-    const data = e.dataTransfer.getData("movingList")
-    moveList({ id: data, destinationId: id })
+	function handleListDragEnter() {
+		if (listStart !== id && listStart && id !== "") {
+			moveList({ startId: listStart, destinationId: id })
+		}
+	}
+  function handleListDrop() {
+    setListStart(null)
   }
 
   return (
     <section className={styles.toDoList} ref={listRef}>
       <div
         draggable={true}
-        onDragStart={handleDragStart}
         onDragOver={(e) => e.preventDefault()}
+        onDragStart={handleListDragStart}
+        onDragEnter={handleListDragEnter}
         onDrop={handleListDrop}
       >
         <ListHeader
           id={id}
           name={name}
-					listRef={listRef}
+          listRef={listRef}
           isOptionsPopUpVisible={isOptionsPopUpVisible}
           setIsOptionsPopUpVisible={setIsOptionsPopUpVisible}
         />
