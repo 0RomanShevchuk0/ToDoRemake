@@ -3,7 +3,7 @@ import { v1 } from "uuid"
 import { ITask, IToDoList } from "../types/ToDoListTypes"
 
 type InitialStateType = {
-  lists: IToDoList[],
+  lists: IToDoList[]
 }
 
 const initialState: InitialStateType = {
@@ -178,7 +178,10 @@ export const ToDoLists = createSlice({
     },
 
     //* Moving
-    moveList(state, action: PayloadAction<{ startId: string; destinationId: string }>) {
+    moveList(
+      state,
+      action: PayloadAction<{ startId: string; destinationId: string }>
+    ) {
       const startList = state.lists.find((l) => l.id === action.payload.startId)
       const destinationList = state.lists.find(
         (l) => l.id === action.payload.destinationId
@@ -199,21 +202,22 @@ export const ToDoLists = createSlice({
       }>
     ) {
       const startList = state.lists.find((l) => l.id === action.payload.listStartId)
-      const startTask = startList?.tasks.find(
-        (t) => t.id === action.payload.taskStartId
-      )
       const destinationList = state.lists.find(
         (l) => l.id === action.payload.destination.listId
+      )
+      const startTask = startList?.tasks.find(
+        (t) => t.id === action.payload.taskStartId
       )
       const destinationTask = destinationList?.tasks.find(
         (t) => t.id === action.payload.destination.taskId
       )
+
       if (startList && destinationTask && startTask) {
         const destination = destinationList?.tasks.indexOf(destinationTask)
+
         startList.tasks = startList?.tasks.filter(
           (t) => t.id !== action.payload.taskStartId
         )
-
         if (destination !== undefined) {
           destinationList?.tasks.splice(destination, 0, startTask)
         }

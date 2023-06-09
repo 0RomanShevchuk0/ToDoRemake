@@ -1,4 +1,4 @@
-import { DragEvent, FC } from "react"
+import { FC } from "react"
 import { useSelector } from "react-redux"
 import { useActions } from "../hooks/useActions"
 import { RootStateType } from "../redux/store"
@@ -11,31 +11,33 @@ interface TaskPropsType extends Omit<ITask, "id"> {
 }
 
 const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
-  const listStart = useSelector(
-    (state: RootStateType) => state.DraggingState.listStart
+  const taskStartList = useSelector(
+    (state: RootStateType) => state.DraggingState.taskStartList
   )
   const taskStart = useSelector(
     (state: RootStateType) => state.DraggingState.taskStart
   )
-  const { toggleIsDone, deleteTask, moveTask, setListStart, setTaskStart } =
+  const { toggleIsDone, deleteTask, moveTask, setTaskStartList, setTaskStart } =
     useActions()
 
   function handleTaskDragStart() {
-		setListStart(listId)
+		setTaskStartList(listId)
     setTaskStart(taskId)
   }
   function handleTaskDragEnter() {
-    if (listStart && taskStart) {
+		if (taskStartList && taskStart) {
+			if(taskStartList !== listId) {
+				setTaskStartList(listId)
+			}
       moveTask({
-        listStartId: listStart,
+        listStartId: taskStartList,
         taskStartId: taskStart,
         destination: { listId, taskId },
       })
     }
   }
   function handleTaskDragEnd() {
-		debugger
-		setListStart(null)
+		setTaskStartList(null)
     setTaskStart(null)
   }
 
@@ -43,12 +45,6 @@ const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
     <div
       key={taskId}
       className={styles.task}
-      // onDrag={(e) => console.log(e.target.closest(`.${styles.task}`))}
-      // draggable={true}
-      // onDragStart={handleDragStart}
-      // onDragOver={(e) => e.preventDefault()}
-      // onDrop={handleTaskDrop}
-
       draggable={true}
       onDragOver={(e) => e.preventDefault()}
       onDragStart={handleTaskDragStart}
