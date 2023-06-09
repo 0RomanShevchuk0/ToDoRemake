@@ -10,7 +10,12 @@ interface TaskPropsType extends Omit<ITask, "id"> {
   taskId: string
 }
 
-const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
+const Task: FC<TaskPropsType> = ({
+  listId,
+  taskId,
+  name,
+  isDone,
+}) => {
   const taskStartList = useSelector(
     (state: RootStateType) => state.DraggingState.taskStartList
   )
@@ -21,14 +26,14 @@ const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
     useActions()
 
   function handleTaskDragStart() {
-		setTaskStartList(listId)
+    setTaskStartList(listId)
     setTaskStart(taskId)
   }
   function handleTaskDragEnter() {
-		if (taskStartList && taskStart) {
-			if(taskStartList !== listId) {
-				setTaskStartList(listId)
-			}
+    if (taskStartList && taskStart) {
+      if (taskStartList !== listId) {
+        setTaskStartList(listId)
+      }
       moveTask({
         listStartId: taskStartList,
         taskStartId: taskStart,
@@ -36,20 +41,20 @@ const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
       })
     }
   }
-  function handleTaskDragEnd() {
-		setTaskStartList(null)
+  function clearDragStarts() {
+    setTaskStartList(null)
     setTaskStart(null)
   }
 
   return (
     <div
-      key={taskId}
       className={styles.task}
       draggable={true}
       onDragOver={(e) => e.preventDefault()}
       onDragStart={handleTaskDragStart}
       onDragEnter={handleTaskDragEnter}
-      onDragEnd={handleTaskDragEnd}
+      onDragEnd={clearDragStarts}
+      onDrop={clearDragStarts}
     >
       <label>
         <input

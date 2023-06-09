@@ -198,7 +198,7 @@ export const ToDoLists = createSlice({
       action: PayloadAction<{
         listStartId: string
         taskStartId: string
-        destination: { listId: string; taskId: string }
+        destination: { listId: string; taskId?: string }
       }>
     ) {
       const startList = state.lists.find((l) => l.id === action.payload.listStartId)
@@ -212,6 +212,16 @@ export const ToDoLists = createSlice({
         (t) => t.id === action.payload.destination.taskId
       )
 
+			// if list is empty
+			if(destinationList?.tasks.length === 0 && startTask && startList) {
+				startList.tasks = startList?.tasks.filter(
+          (t) => t.id !== action.payload.taskStartId
+        )
+				destinationList.tasks.push(startTask)
+				return
+			}
+			
+			// if list is not empty
       if (startList && destinationTask && startTask) {
         const destination = destinationList?.tasks.indexOf(destinationTask)
 

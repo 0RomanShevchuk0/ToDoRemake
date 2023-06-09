@@ -9,3 +9,6 @@ export interface ITask {
   name: string
   isDone: boolean
 }
+
+export type TasksFilterType = "All" | "Active" | "Completed"
+

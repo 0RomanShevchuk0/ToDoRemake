@@ -1,5 +1,5 @@
 import { FC, MutableRefObject, useRef, useState } from "react"
-import { IToDoList } from "../types/ToDoListTypes"
+import { IToDoList, TasksFilterType } from "../types/ToDoListTypes"
 import styles from "../styles/ToDoList.module.scss"
 import Task from "./Task"
 import Filter from "./TasksFilter"
@@ -9,11 +9,18 @@ import { useActions } from "../hooks/useActions"
 import { useSelector } from "react-redux"
 import { RootStateType } from "../redux/store"
 
-export type TasksFilterType = "All" | "Active" | "Completed"
-
 const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
-  const listStart = useSelector((state: RootStateType) => state.DraggingState.listStart)
-  const { moveList, setListStart } = useActions()
+  const listStart = useSelector(
+    (state: RootStateType) => state.DraggingState.listStart
+  )
+  const taskStartList = useSelector(
+    (state: RootStateType) => state.DraggingState.taskStartList
+  )
+  const taskStart = useSelector(
+    (state: RootStateType) => state.DraggingState.taskStart
+  )
+
+  const { moveList, setListStart, moveTask, setTaskStartList } = useActions()
 
   const listRef = useRef() as MutableRefObject<HTMLDivElement>
   const [isOptionsPopUpVisible, setIsOptionsPopUpVisible] = useState(false)
@@ -40,13 +47,26 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
   function handleListDragStart() {
     setListStart(id)
   }
-	function handleListDragEnter() {
-		if (listStart !== id && listStart) {
-			moveList({ startId: listStart, destinationId: id })
-		}
-	}
+  function handleListDragEnter() {
+    if (listStart !== id && listStart) {
+      moveList({ startId: listStart, destinationId: id })
+    }
+  }
   function handleListDragEnd() {
     setListStart(null)
+  }
+
+  function handleTaskDragEnter() {
+    if (tasks.length === 0 && taskStartList && taskStart) {
+      if (taskStartList !== id) {
+        setTaskStartList(id)
+      }
+      moveTask({
+        listStartId: taskStartList,
+        taskStartId: taskStart,
+        destination: { listId: id },
+      })
+    }
   }
 
   return (
@@ -67,7 +87,13 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
         />
       </div>
       <div className={styles.filters}>{filterElements}</div>
-      <div className={styles.tasks}>{taskItems}</div>
+      <div
+        onDragOver={(e) => e.preventDefault()}
+        onDragEnter={handleTaskDragEnter}
+        className={styles.tasks}
+      >
+        {taskItems}
+      </div>
       <AddTask id={id} />
     </section>
   )
