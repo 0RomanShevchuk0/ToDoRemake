@@ -1,4 +1,4 @@
-import { FC, MutableRefObject, useRef, useState } from "react"
+import { FC, MutableRefObject, useEffect, useRef, useState } from "react"
 import { IToDoList, TasksFilterType } from "../types/ToDoListTypes"
 import styles from "../styles/ToDoList.module.scss"
 import Task from "./Task"
@@ -8,6 +8,7 @@ import ListHeader from "./ListHeader"
 import { useActions } from "../hooks/useActions"
 import { useSelector } from "react-redux"
 import { RootStateType } from "../redux/store"
+
 
 const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
   const listStart = useSelector(
@@ -41,7 +42,14 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
     }
   })
   const taskItems = filteredTasks.map((t) => (
-    <Task key={t.id} listId={id} taskId={t.id} name={t.name} isDone={t.isDone} />
+    <Task
+      key={t.id}
+      listId={id}
+      taskId={t.id}
+      name={t.name}
+      isDone={t.isDone}
+      listRef={listRef}
+    />
   ))
 
   function handleListDragStart() {

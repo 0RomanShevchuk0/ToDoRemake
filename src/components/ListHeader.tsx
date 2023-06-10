@@ -2,6 +2,7 @@ import { FC, MutableRefObject, useEffect, useState } from "react"
 import { useActions } from "../hooks/useActions"
 import styles from "../styles/ToDoList.module.scss"
 import { SlOptions } from "react-icons/sl"
+import { BsFillCheckCircleFill, BsFillXCircleFill } from "react-icons/bs"
 import onKeyDownEvents from "../utils/onKeyDownEvents"
 import { useSelector } from "react-redux"
 import { RootStateType } from "../redux/store"
@@ -21,23 +22,23 @@ const ListHeader: FC<ListHeaderPropType> = ({
   setIsOptionsPopUpVisible,
   listRef,
 }) => {
-  const isListEditing = useSelector(
-    (state: RootStateType) => state.ToDoLists.editingList
+  const editingList = useSelector(
+    (state: RootStateType) => state.EditingElements.editingList
   )
   const [changedName, setChangedName] = useState(name)
 
   const { deleteList, changeListName, setEditingList } = useActions()
 
   useEffect(() => {
-    function hideDelete(e: any) {
+    function hideManage(e: any) {
       if (isOptionsPopUpVisible && e.target.tagName !== "LI") {
         setIsOptionsPopUpVisible(false)
       }
     }
-    listRef.current.addEventListener("click", hideDelete)
+    listRef.current.addEventListener("click", hideManage)
 
     return () =>
-      listRef.current && listRef.current.removeEventListener("click", hideDelete)
+      listRef.current && listRef.current.removeEventListener("click", hideManage)
   }, [isOptionsPopUpVisible])
 
   function handleEdit() {
@@ -59,10 +60,10 @@ const ListHeader: FC<ListHeaderPropType> = ({
 
   return (
     <div className={styles.header}>
-      {isListEditing !== id ? (
+      {editingList !== id ? (
         <h3 className={styles.title}>{name}</h3>
       ) : (
-        <>
+        <div className={styles.editField}>
           <input
             type="text"
             value={changedName}
@@ -70,9 +71,21 @@ const ListHeader: FC<ListHeaderPropType> = ({
             onKeyDown={handleKeyDown}
             autoFocus
           />
-          <button onClick={handleConfirmNameChange}>Confirm</button>
-          <button onClick={handleCancelNameChange}>Cancel</button>
-        </>
+          <div className={styles.buttons}>
+            <button
+              onClick={handleConfirmNameChange}
+              className="button-without-background"
+            >
+              <BsFillCheckCircleFill />
+            </button>
+            <button
+              onClick={handleCancelNameChange}
+              className="button-without-background"
+            >
+              <BsFillXCircleFill />
+            </button>
+          </div>
+        </div>
       )}
       <button
         className="button-without-background x-mark"

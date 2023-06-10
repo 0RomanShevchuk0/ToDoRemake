@@ -4,7 +4,6 @@ import { ITask, IToDoList } from "../types/ToDoListTypes"
 
 type InitialStateType = {
   lists: IToDoList[]
-	editingList: string | null
 }
 
 const initialState: InitialStateType = {
@@ -124,18 +123,13 @@ const initialState: InitialStateType = {
         },
       ],
     },
-  ],
-	editingList: null
+  ]
 }
 
 export const ToDoLists = createSlice({
   name: "ToDoLists",
   initialState,
   reducers: {
-		setEditingList(state, action: PayloadAction<string | null>) {
-			state.editingList = action.payload
-		},
-
     //* Lists
     addList(state, action: PayloadAction<string>) {
       const newList: IToDoList = {
@@ -182,6 +176,13 @@ export const ToDoLists = createSlice({
         taskToChange.isDone = !taskToChange.isDone
       }
     },
+		changeTaskName(state, action: PayloadAction<{ listId: string; taskId: string; newName: string }>) {
+      const currentList = state.lists.find((l) => l.id === action.payload.listId)
+      const currentTask = currentList?.tasks?.find((t) => t.id === action.payload.taskId)
+      if (currentTask) {
+        currentTask.name = action.payload.newName
+      }
+    },
 
     //* Moving
     moveList(
@@ -218,16 +219,16 @@ export const ToDoLists = createSlice({
         (t) => t.id === action.payload.destination.taskId
       )
 
-			// if list is empty
-			if(destinationList?.tasks.length === 0 && startTask && startList) {
-				startList.tasks = startList?.tasks.filter(
+      // if list is empty
+      if (destinationList?.tasks.length === 0 && startTask && startList) {
+        startList.tasks = startList?.tasks.filter(
           (t) => t.id !== action.payload.taskStartId
         )
-				destinationList.tasks.push(startTask)
-				return
-			}
-			
-			// if list is not empty
+        destinationList.tasks.push(startTask)
+        return
+      }
+
+      // if list is not empty
       if (startList && destinationTask && startTask) {
         const destination = destinationList?.tasks.indexOf(destinationTask)
 
@@ -243,12 +244,12 @@ export const ToDoLists = createSlice({
 })
 
 export const {
-	setEditingList,
   addList,
   deleteList,
   changeListName,
   addTask,
   deleteTask,
+	changeTaskName,
   toggleIsDone,
   moveTask,
   moveList,

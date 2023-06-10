@@ -8,13 +8,16 @@
   background-color: v.$secondary-color;
   padding: 20px 8px;
 
-  input {
+  input[type=checkbox] {
     margin-right: 8px;
   }
+  input[type=text] {
+		font-size: 16px;
+  }
 
-	.buttons {
+	.editField {
 		display: flex;
-		gap: 4px;
+		gap: 8px;
 	}
 
   button {
