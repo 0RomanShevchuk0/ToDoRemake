@@ -2,6 +2,9 @@ import { FC, MutableRefObject, useEffect, useState } from "react"
 import { useActions } from "../hooks/useActions"
 import styles from "../styles/ToDoList.module.scss"
 import { SlOptions } from "react-icons/sl"
+import onKeyDownEvents from "../utils/onKeyDownEvents"
+import { useSelector } from "react-redux"
+import { RootStateType } from "../redux/store"
 
 type ListHeaderPropType = {
   name: string
@@ -18,10 +21,12 @@ const ListHeader: FC<ListHeaderPropType> = ({
   setIsOptionsPopUpVisible,
   listRef,
 }) => {
-  const { deleteList, changeListName } = useActions()
-
+  const isListEditing = useSelector(
+    (state: RootStateType) => state.ToDoLists.editingList
+  )
   const [changedName, setChangedName] = useState(name)
-  const [isEditMode, setIsEditMode] = useState(false)
+
+  const { deleteList, changeListName, setEditingList } = useActions()
 
   useEffect(() => {
     function hideDelete(e: any) {
@@ -36,21 +41,25 @@ const ListHeader: FC<ListHeaderPropType> = ({
   }, [isOptionsPopUpVisible])
 
   function handleEdit() {
-    setIsEditMode(true)
+    setEditingList(id)
     setIsOptionsPopUpVisible(false)
   }
   function handleConfirmNameChange() {
     changeListName({ id, newName: changedName })
-    setIsEditMode(false)
+    setEditingList(null)
   }
   function handleCancelNameChange() {
     setChangedName(name)
-    setIsEditMode(false)
+    setEditingList(null)
   }
-	
+  const handleKeyDown = onKeyDownEvents(
+    handleConfirmNameChange,
+    handleCancelNameChange
+  )
+
   return (
     <div className={styles.header}>
-      {!isEditMode ? (
+      {isListEditing !== id ? (
         <h3 className={styles.title}>{name}</h3>
       ) : (
         <>
@@ -58,6 +67,8 @@ const ListHeader: FC<ListHeaderPropType> = ({
             type="text"
             value={changedName}
             onChange={(e) => setChangedName(e.target.value)}
+            onKeyDown={handleKeyDown}
+            autoFocus
           />
           <button onClick={handleConfirmNameChange}>Confirm</button>
           <button onClick={handleCancelNameChange}>Cancel</button>

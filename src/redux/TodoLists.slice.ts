@@ -4,6 +4,7 @@ import { ITask, IToDoList } from "../types/ToDoListTypes"
 
 type InitialStateType = {
   lists: IToDoList[]
+	editingList: string | null
 }
 
 const initialState: InitialStateType = {
@@ -124,12 +125,17 @@ const initialState: InitialStateType = {
       ],
     },
   ],
+	editingList: null
 }
 
 export const ToDoLists = createSlice({
   name: "ToDoLists",
   initialState,
   reducers: {
+		setEditingList(state, action: PayloadAction<string | null>) {
+			state.editingList = action.payload
+		},
+
     //* Lists
     addList(state, action: PayloadAction<string>) {
       const newList: IToDoList = {
@@ -237,6 +243,7 @@ export const ToDoLists = createSlice({
 })
 
 export const {
+	setEditingList,
   addList,
   deleteList,
   changeListName,
