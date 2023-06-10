@@ -1,4 +1,4 @@
-import { FC, MutableRefObject, useEffect } from "react"
+import { FC, MutableRefObject, useEffect, useState } from "react"
 import { useActions } from "../hooks/useActions"
 import styles from "../styles/ToDoList.module.scss"
 import { SlOptions } from "react-icons/sl"
@@ -6,7 +6,7 @@ import { SlOptions } from "react-icons/sl"
 type ListHeaderPropType = {
   name: string
   id: string
-	listRef: MutableRefObject<HTMLDivElement>
+  listRef: MutableRefObject<HTMLDivElement>
   isOptionsPopUpVisible: boolean
   setIsOptionsPopUpVisible: (isVisible: boolean) => void
 }
@@ -16,11 +16,14 @@ const ListHeader: FC<ListHeaderPropType> = ({
   id,
   isOptionsPopUpVisible,
   setIsOptionsPopUpVisible,
-	listRef
+  listRef,
 }) => {
-  const { deleteList } = useActions()
+  const { deleteList, changeListName } = useActions()
 
-	useEffect(() => {
+  const [changedName, setChangedName] = useState(name)
+  const [isEditMode, setIsEditMode] = useState(false)
+
+  useEffect(() => {
     function hideDelete(e: any) {
       if (isOptionsPopUpVisible && e.target.tagName !== "LI") {
         setIsOptionsPopUpVisible(false)
@@ -32,9 +35,34 @@ const ListHeader: FC<ListHeaderPropType> = ({
       listRef.current && listRef.current.removeEventListener("click", hideDelete)
   }, [isOptionsPopUpVisible])
 
+  function handleEdit() {
+    setIsEditMode(true)
+    setIsOptionsPopUpVisible(false)
+  }
+  function handleConfirmNameChange() {
+    changeListName({ id, newName: changedName })
+    setIsEditMode(false)
+  }
+  function handleCancelNameChange() {
+    setChangedName(name)
+    setIsEditMode(false)
+  }
+	
   return (
     <div className={styles.header}>
-      <h3 className={styles.title}>{name}</h3>
+      {!isEditMode ? (
+        <h3 className={styles.title}>{name}</h3>
+      ) : (
+        <>
+          <input
+            type="text"
+            value={changedName}
+            onChange={(e) => setChangedName(e.target.value)}
+          />
+          <button onClick={handleConfirmNameChange}>Confirm</button>
+          <button onClick={handleCancelNameChange}>Cancel</button>
+        </>
+      )}
       <button
         className="button-without-background x-mark"
         onClick={() => setIsOptionsPopUpVisible(true)}
@@ -44,7 +72,8 @@ const ListHeader: FC<ListHeaderPropType> = ({
       {isOptionsPopUpVisible && (
         <div className={styles.optionsPopUp}>
           <ul>
-            <li onClick={() => deleteList(id)}>Delete list</li>
+            <li onClick={handleEdit}>Edit</li>
+            <li onClick={() => deleteList(id)}>Delete</li>
           </ul>
         </div>
       )}

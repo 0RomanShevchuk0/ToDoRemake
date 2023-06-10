@@ -142,7 +142,7 @@ export const ToDoLists = createSlice({
     deleteList(state, action: PayloadAction<string>) {
       state.lists = state.lists.filter((l) => l.id !== action.payload)
     },
-    changeTitle(state, action: PayloadAction<{ id: string; newName: string }>) {
+    changeListName(state, action: PayloadAction<{ id: string; newName: string }>) {
       const currentList = state.lists.find((l) => l.id === action.payload.id)
       if (currentList) {
         currentList.name = action.payload.newName
@@ -239,7 +239,7 @@ export const ToDoLists = createSlice({
 export const {
   addList,
   deleteList,
-  changeTitle,
+  changeListName,
   addTask,
   deleteTask,
   toggleIsDone,

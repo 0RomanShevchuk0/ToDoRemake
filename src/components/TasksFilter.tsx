@@ -1,7 +1,7 @@
 import { FC } from "react"
 import classNames from "classnames"
-import { TasksFilterType } from "./TodoList"
 import styles from "../styles/ToDoList.module.scss"
+import { TasksFilterType } from "../types/ToDoListTypes"
 
 type TasksFilterPropsType = {
   f: TasksFilterType
