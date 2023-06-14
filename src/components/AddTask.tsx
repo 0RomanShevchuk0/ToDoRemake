@@ -44,6 +44,7 @@ const AddTask: FC<{ id: string }> = ({ id }) => {
             onChange={handleNameChange}
             onKeyDown={handleKeyDown}
             placeholder="Enter a title for this task"
+						autoFocus
           />
           {error && <div className={styles.errorMessage}>{error}</div>}
           <div className={styles.buttons}>

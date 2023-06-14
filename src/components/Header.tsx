@@ -9,7 +9,7 @@ type HeaderPropsType = {
 const Header: FC<HeaderPropsType> = ({ isGrid, setIsGrid }) => {
   return (
     <header className={styles.header}>
-      Header
+      <h3>Trello ToDos</h3>
       <button onClick={() => setIsGrid(!isGrid)}>
         Switch to {isGrid ? 'row' : 'grid'}
       </button>

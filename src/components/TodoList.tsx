@@ -1,4 +1,4 @@
-import { FC, MutableRefObject, useEffect, useRef, useState } from "react"
+import { FC, MutableRefObject, useRef, useState } from "react"
 import { IToDoList, TasksFilterType } from "../types/ToDoListTypes"
 import styles from "../styles/ToDoList.module.scss"
 import Task from "./Task"

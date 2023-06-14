@@ -54,6 +54,7 @@ const AddList: FC = () => {
             className={styles.nameInput}
             type="text"
             placeholder="List name"
+						autoFocus
           />
           {error && <span className="errorMessage">{error}</span>}
           <button onClick={handleAddList} className={styles.addButton}>

@@ -1,6 +1,5 @@
 @use "./variables" as v;
 
-
 .header {
 	position: fixed;
 	top: 0;
@@ -9,13 +8,29 @@
 	height: 60px;
 	z-index: 10;
 	display: flex;
+	justify-content: space-between;
 	align-items: center;
 	padding: 0px 20px;
 	background: rgb(0, 0, 0, 0.6);
 
+	h3 {
+		font-size: 20px;
+	}
+
 	button {
 		background-color: v.$button-color;
-		color: v.$background
+		color: v.$background;
+		border-radius: 6px;
+		border: none;
+		outline: none;
+		margin-right: 50px;
+		padding: 4px 8px;
+		font-size: 16px;
+		transition: .2s;
+
+		&:hover {
+			background-color: v.$text-color;
+		}
 	}
 }
 
