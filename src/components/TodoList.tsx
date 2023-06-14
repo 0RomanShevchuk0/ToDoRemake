@@ -1,4 +1,4 @@
-import { FC, MutableRefObject, useRef, useState } from "react"
+import { FC, MutableRefObject, useEffect, useRef, useState } from "react"
 import { IToDoList, TasksFilterType } from "../types/ToDoListTypes"
 import styles from "../styles/ToDoList.module.scss"
 import Task from "./Task"
@@ -24,6 +24,7 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
   const { moveList, setListStart, moveTask, setTaskStartList } = useActions()
 
   const listRef = useRef() as MutableRefObject<HTMLDivElement>
+  const listHeaderRef = useRef() as MutableRefObject<HTMLDivElement>
   const [isOptionsPopUpVisible, setIsOptionsPopUpVisible] = useState(false)
 
   const [filter, setFilter] = useState<TasksFilterType>("All")
@@ -53,6 +54,8 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
   ))
 
   function handleListDragStart() {
+		// listHeaderRef.current.style.cursor = 'grabbing'
+
     setListStart(id)
   }
   function handleListDragEnter() {
@@ -85,6 +88,8 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
         onDragStart={handleListDragStart}
         onDragEnter={handleListDragEnter}
         onDragEnd={handleListDragEnd}
+				ref={listHeaderRef}
+				style={{cursor: 'grab'}}
       >
         <ListHeader
           id={id}
