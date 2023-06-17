@@ -28,14 +28,6 @@ const initialState: InitialStateType = {
           isDone: true,
         },
       ],
-      location: {
-        x: 0,
-        y: 0,
-        destination: {
-          x: null,
-          y: null,
-        },
-      },
     },
     {
       id: v1(),
@@ -67,14 +59,6 @@ const initialState: InitialStateType = {
           isDone: false,
         },
       ],
-      location: {
-        x: 0,
-        y: 0,
-        destination: {
-          x: null,
-          y: null,
-        },
-      },
     },
     {
       id: v1(),
@@ -96,14 +80,6 @@ const initialState: InitialStateType = {
           isDone: true,
         },
       ],
-      location: {
-        x: 0,
-        y: 0,
-        destination: {
-          x: null,
-          y: null,
-        },
-      },
     },
     {
       id: v1(),
@@ -125,82 +101,41 @@ const initialState: InitialStateType = {
           isDone: true,
         },
       ],
-      location: {
-        x: 0,
-        y: 0,
-        destination: {
-          x: null,
-          y: null,
-        },
-      },
     },
-    // {
-    //   id: v1(),
-    //   name: "Work tasks",
-    //   tasks: [
-    //     {
-    //       id: v1(),
-    //       name: "Prepare presentation",
-    //       isDone: false,
-    //     },
-    //     {
-    //       id: v1(),
-    //       name: "Reply to emails",
-    //       isDone: false,
-    //     },
-    //     {
-    //       id: v1(),
-    //       name: "Submit reports",
-    //       isDone: true,
-    //     },
-    //   ],
-    //   location: {
-    //     x: 0,
-    //     y: 0,
-    //     destination: {
-    //       x: null,
-    //       y: null,
-    //     },
-    //   },
-    // },
-  ],
+    {
+      id: v1(),
+      name: "Work tasks",
+      tasks: [
+        {
+          id: v1(),
+          name: "Prepare presentation",
+          isDone: false,
+        },
+        {
+          id: v1(),
+          name: "Reply to emails",
+          isDone: false,
+        },
+        {
+          id: v1(),
+          name: "Submit reports",
+          isDone: true,
+        },
+      ],
+    },
+  ]
 }
 
 export const ToDoLists = createSlice({
   name: "ToDoLists",
   initialState,
   reducers: {
-    setListLocation(
-      state,
-      action: PayloadAction<{
-        listId: string
-        location: { x: number; y: number; destination?: { x: number | null; y: number | null } }
-      }>
-    ) {
-      const list = state.lists.find((l) => l.id === action.payload.listId)
-      if (list) {
-        list.location.x = action.payload.location.x
-        list.location.y = action.payload.location.y
-				if(action.payload.location.destination){
-					list.location.destination = action.payload.location.destination
-				}
-      }
-    },
-
     //* Lists
     addList(state, action: PayloadAction<string>) {
       const newList: IToDoList = {
         id: v1(),
         name: action.payload,
         tasks: [],
-        location: {
-          x: 0,
-          y: 0,
-          destination: {
-            x: null,
-            y: null,
-          },
-        },
       }
       state.lists.push(newList)
     },
@@ -241,14 +176,9 @@ export const ToDoLists = createSlice({
         taskToChange.isDone = !taskToChange.isDone
       }
     },
-    changeTaskName(
-      state,
-      action: PayloadAction<{ listId: string; taskId: string; newName: string }>
-    ) {
+		changeTaskName(state, action: PayloadAction<{ listId: string; taskId: string; newName: string }>) {
       const currentList = state.lists.find((l) => l.id === action.payload.listId)
-      const currentTask = currentList?.tasks?.find(
-        (t) => t.id === action.payload.taskId
-      )
+      const currentTask = currentList?.tasks?.find((t) => t.id === action.payload.taskId)
       if (currentTask) {
         currentTask.name = action.payload.newName
       }
@@ -319,11 +249,10 @@ export const {
   changeListName,
   addTask,
   deleteTask,
-  changeTaskName,
+	changeTaskName,
   toggleIsDone,
   moveTask,
   moveList,
-  setListLocation,
 } = ToDoLists.actions
 
 export default ToDoLists.reducer

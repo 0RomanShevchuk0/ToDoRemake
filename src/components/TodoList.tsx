@@ -1,4 +1,4 @@
-import { FC, MutableRefObject, TouchEvent, useEffect, useRef, useState } from "react"
+import { FC, MutableRefObject, useEffect, useRef, useState } from "react"
 import { IToDoList, TasksFilterType } from "../types/ToDoListTypes"
 import styles from "../styles/ToDoList.module.scss"
 import Task from "./Task"
@@ -9,8 +9,8 @@ import { useActions } from "../hooks/useActions"
 import { useSelector } from "react-redux"
 import { RootStateType } from "../redux/store"
 
-const TodoList: FC<IToDoList> = ({ id, tasks, name, location }) => {
-  const lists = useSelector((state: RootStateType) => state.ToDoLists.lists)
+
+const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
   const listStart = useSelector(
     (state: RootStateType) => state.DraggingState.listStart
   )
@@ -21,8 +21,7 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name, location }) => {
     (state: RootStateType) => state.DraggingState.taskStart
   )
 
-  const { moveList, setListStart, moveTask, setTaskStartList, setListLocation } =
-    useActions()
+  const { moveList, setListStart, moveTask, setTaskStartList } = useActions()
 
   const listRef = useRef() as MutableRefObject<HTMLDivElement>
   const listHeaderRef = useRef() as MutableRefObject<HTMLDivElement>
@@ -53,21 +52,10 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name, location }) => {
       listRef={listRef}
     />
   ))
-	console.log('render')
-  const [isLocationReset, resetLocation] = useState(false)
-  useEffect(() => {
-    const listLocation = listRef.current.getBoundingClientRect()
-    setListLocation({
-      listId: id,
-      location: {
-        x: listLocation.x,
-        y: listLocation.y,
-        destination: { x: null, y: null },
-      },
-    })
-  }, [isLocationReset])
 
   function handleListDragStart() {
+		// listHeaderRef.current.style.cursor = 'grabbing'
+
     setListStart(id)
   }
   function handleListDragEnter() {
@@ -92,43 +80,6 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name, location }) => {
     }
   }
 
-  function handleTouchMove(e: TouchEvent<HTMLDivElement>) {
-    listRef.current.style.position = "relative"
-    listRef.current.style.zIndex = `${100}`
-    setListLocation({
-      listId: id,
-      location: {
-        ...location,
-        destination: { x: e.touches[0].clientX, y: e.touches[0].clientY },
-      },
-    })
-    if (location.destination.x && location.destination.y) {
-      listRef.current.style.top = `${location.destination.y - 80}px`
-      listRef.current.style.left = `${
-        location.destination.x - listRef.current.clientWidth / 2
-      }px`
-    }
-
-    let destinationList = id
-    lists.forEach((l) => {
-      if (location.destination.x && location.destination.y && id !== l.id) {
-        if (
-          location.destination.x >
-          l.location.x + listRef.current.clientWidth / 2
-        ) {
-          destinationList = l.id
-          moveList({ startId: id, destinationId: destinationList })
-          setListLocation({
-            listId: l.id,
-            location: { x: location.x, y: location.y },
-          })
-          resetLocation(!isLocationReset)
-          listRef.current.style.position = "static"
-        }
-      }
-    })
-  }
-
   return (
     <section className={styles.toDoList} ref={listRef}>
       <div
@@ -137,9 +88,8 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name, location }) => {
         onDragStart={handleListDragStart}
         onDragEnter={handleListDragEnter}
         onDragEnd={handleListDragEnd}
-        ref={listHeaderRef}
-        style={{ cursor: "grab" }}
-        onTouchMove={handleTouchMove}
+				ref={listHeaderRef}
+				style={{cursor: 'grab'}}
       >
         <ListHeader
           id={id}
