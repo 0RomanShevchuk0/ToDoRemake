@@ -11,7 +11,7 @@ import AddList from "./components/AddList"
 const App: FC = () => {
   const toDoLists = useSelector((state: RootStateType) => state.ToDoLists)
   const toDoListElements = toDoLists.lists.map((l: IToDoList) => (
-    <TodoList key={l.id} id={l.id} tasks={l.tasks} name={l.name} />
+    <TodoList key={l.id} id={l.id} tasks={l.tasks} name={l.name} location={l.location} />
   ))
 
   const [isGrid, setIsGrid] = useState<boolean>(true)
