@@ -123,7 +123,7 @@ const initialState: InitialStateType = {
         },
       ],
     },
-  ]
+  ],
 }
 
 export const ToDoLists = createSlice({
@@ -176,9 +176,14 @@ export const ToDoLists = createSlice({
         taskToChange.isDone = !taskToChange.isDone
       }
     },
-		changeTaskName(state, action: PayloadAction<{ listId: string; taskId: string; newName: string }>) {
+    changeTaskName(
+      state,
+      action: PayloadAction<{ listId: string; taskId: string; newName: string }>
+    ) {
       const currentList = state.lists.find((l) => l.id === action.payload.listId)
-      const currentTask = currentList?.tasks?.find((t) => t.id === action.payload.taskId)
+      const currentTask = currentList?.tasks?.find(
+        (t) => t.id === action.payload.taskId
+      )
       if (currentTask) {
         currentTask.name = action.payload.newName
       }
@@ -240,6 +245,40 @@ export const ToDoLists = createSlice({
         }
       }
     },
+    moveListMobile(
+      state,
+      action: PayloadAction<{
+        listId: string
+        destination: "up" | "down"
+      }>
+    ) {
+      const list = state.lists.find((l) => l.id === action.payload.listId)
+      if (list) {
+        const listIndex = state.lists.indexOf(list)
+        const destinationListIndex =
+          action.payload.destination === "up" ? listIndex - 1 : listIndex + 1
+				state.lists[listIndex] = state.lists[destinationListIndex]
+				state.lists[destinationListIndex] = list
+      }
+    },
+    moveTaskMobile(
+      state,
+      action: PayloadAction<{
+        listId: string
+        taskId: string
+        destination: "up" | "down"
+      }>
+    ) {
+      const list = state.lists.find((l) => l.id === action.payload.listId)
+      const task = list?.tasks.find((t) => t.id === action.payload.taskId)
+      if (list && task) {
+        const taskIndex = list.tasks.indexOf(task)
+        const destinationTaskIndex =
+          action.payload.destination === "up" ? taskIndex - 1 : taskIndex + 1
+        list.tasks[taskIndex] = list.tasks[destinationTaskIndex]
+        list.tasks[destinationTaskIndex] = task
+      }
+    },
   },
 })
 
@@ -249,10 +288,11 @@ export const {
   changeListName,
   addTask,
   deleteTask,
-	changeTaskName,
+  changeTaskName,
   toggleIsDone,
   moveTask,
   moveList,
+  moveTaskMobile,
 } = ToDoLists.actions
 
 export default ToDoLists.reducer

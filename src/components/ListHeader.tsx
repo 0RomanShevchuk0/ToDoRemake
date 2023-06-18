@@ -1,11 +1,11 @@
-import { FC, MutableRefObject, useEffect, useState } from "react"
+import { FC, MutableRefObject, useEffect } from "react"
 import { useActions } from "../hooks/useActions"
 import styles from "../styles/ToDoList.module.scss"
 import { SlOptions } from "react-icons/sl"
-import { BsFillCheckCircleFill, BsFillXCircleFill } from "react-icons/bs"
-import onKeyDownEvents from "../utils/onKeyDownEvents"
 import { useSelector } from "react-redux"
 import { RootStateType } from "../redux/store"
+import ListEditField from "./ListEditField"
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io"
 
 type ListHeaderPropType = {
   name: string
@@ -25,9 +25,11 @@ const ListHeader: FC<ListHeaderPropType> = ({
   const editingList = useSelector(
     (state: RootStateType) => state.EditingElements.editingList
   )
-  const [changedName, setChangedName] = useState(name)
+  const isMobileMovingMode = useSelector(
+    (state: RootStateType) => state.DraggingState.isMobileMovingMode
+  )
 
-  const { deleteList, changeListName, setEditingList } = useActions()
+  const { deleteList, setEditingList, moveListMobile } = useActions()
 
   useEffect(() => {
     function hideManage(e: any) {
@@ -45,54 +47,38 @@ const ListHeader: FC<ListHeaderPropType> = ({
     setEditingList(id)
     setIsOptionsPopUpVisible(false)
   }
-  function handleConfirmNameChange() {
-    changeListName({ id, newName: changedName })
-    setEditingList(null)
-  }
-  function handleCancelNameChange() {
-    setChangedName(name)
-    setEditingList(null)
-  }
-  const handleKeyDown = onKeyDownEvents(
-    handleConfirmNameChange,
-    handleCancelNameChange
-  )
 
   return (
     <div className={styles.header}>
       {editingList !== id ? (
         <h3 className={styles.title}>{name}</h3>
       ) : (
-        <div className={styles.editField}>
-          <input
-            type="text"
-            value={changedName}
-            onChange={(e) => setChangedName(e.target.value)}
-            onKeyDown={handleKeyDown}
-            autoFocus
-          />
-          <div className={styles.buttons}>
-            <button
-              onClick={handleConfirmNameChange}
-              className="button-without-background"
-            >
-              <BsFillCheckCircleFill />
-            </button>
-            <button
-              onClick={handleCancelNameChange}
-              className="button-without-background"
-            >
-              <BsFillXCircleFill />
-            </button>
-          </div>
+        <ListEditField id={id} name={name} />
+      )}
+
+      {!isMobileMovingMode ? (
+        <button
+          className="button-without-background x-mark"
+          onClick={() => setIsOptionsPopUpVisible(true)}
+        >
+          <SlOptions />
+        </button>
+      ) : (
+        <div>
+          <button
+            className="button-without-background x-mark"
+            onClick={() => moveListMobile({ listId: id, destination: "up" })}
+          >
+            <IoIosArrowBack />
+          </button>
+          <button
+            className="button-without-background x-mark"
+            onClick={() => moveListMobile({ listId: id, destination: "down" })}
+          >
+            <IoIosArrowForward />
+          </button>
         </div>
       )}
-      <button
-        className="button-without-background x-mark"
-        onClick={() => setIsOptionsPopUpVisible(true)}
-      >
-        <SlOptions />
-      </button>
       {isOptionsPopUpVisible && (
         <div className={styles.optionsPopUp}>
           <ul>

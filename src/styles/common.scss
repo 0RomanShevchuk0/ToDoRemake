@@ -3,12 +3,17 @@
 
 button {
 	cursor: pointer;
+	transition: .2s;
 }
 
 .button-without-background {
 	cursor: pointer;
 	background: none;
 	border: none;
+
+	&:hover {
+		color: rgb(169, 166, 166);
+	}
 }
 
 .x-mark {
