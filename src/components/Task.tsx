@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react"
+import { FC } from "react"
 import { useSelector } from "react-redux"
 import { useActions } from "../hooks/useActions"
 import { RootStateType } from "../redux/store"
@@ -6,23 +6,20 @@ import styles from "../styles/Task.module.scss"
 import { ITask } from "../types/ToDoListTypes"
 import { BsFillTrash3Fill } from "react-icons/bs"
 import { MdModeEdit } from "react-icons/md"
-import { BsFillCheckCircleFill, BsFillXCircleFill } from "react-icons/bs"
-import onKeyDownEvents from "../utils/onKeyDownEvents"
+import TaskEditField from "./TaskEditField"
 
 interface TaskPropsType extends Omit<ITask, "id"> {
   listId: string
   taskId: string
-  listRef: any
 }
 
-const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone, listRef }) => {
+const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
   const taskStartList = useSelector(
     (state: RootStateType) => state.DraggingState.taskStartList
   )
   const taskStart = useSelector(
     (state: RootStateType) => state.DraggingState.taskStart
   )
-
   const editingTask = useSelector(
     (state: RootStateType) => state.EditingElements.editingTask
   )
@@ -34,10 +31,7 @@ const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone, listRef }) => {
     setTaskStartList,
     setTaskStart,
     setEditingTask,
-    changeTaskName,
   } = useActions()
-
-  const [newTaskName, setNewTaskName] = useState(name)
 
   function handleTaskDragStart() {
     setTaskStartList(listId)
@@ -61,33 +55,6 @@ const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone, listRef }) => {
     setTaskStart(null)
   }
 
-  function handleChangeTaskName() {
-    if (newTaskName.trim() !== "") {
-      changeTaskName({ listId, taskId, newName: newTaskName })
-    }
-    setEditingTask(null)
-  }
-  function handleCancelNameChange() {
-    setNewTaskName(name)
-    setEditingTask(null)
-  }
-  const handleKeyDown = onKeyDownEvents(handleChangeTaskName, handleCancelNameChange)
-
-  // useEffect(() => {
-  //   function hideManage(e: any) {
-  //     // if (
-  //     //   editingTask === taskId
-  //     //   // e.target.closest("button") === "task-manage-button"
-  //     // ) {
-  //     //   setEditingTask(null)
-  //     // }
-  //   }
-  //   listRef.current.addEventListener("click", hideManage)
-
-  //   return () =>
-  //     listRef.current && listRef.current.removeEventListener("click", hideManage)
-  // }, [editingTask])
-
   return (
     <div
       className={styles.task}
@@ -96,9 +63,8 @@ const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone, listRef }) => {
       onDragStart={handleTaskDragStart}
       onDragEnter={handleTaskDragEnter}
       onDragEnd={clearDragStarts}
-      onDrop={clearDragStarts}
     >
-      <label style={{display: 'flex'}}>
+      <label style={{ display: "flex" }}>
         <input
           type="checkbox"
           checked={isDone}
@@ -108,25 +74,10 @@ const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone, listRef }) => {
         {editingTask !== taskId ? (
           name
         ) : (
-          <div className={styles.editField}>
-            <input
-              type="text"
-              value={newTaskName}
-              onChange={(e) => setNewTaskName(e.target.value)}
-              onKeyDown={handleKeyDown}
-              autoFocus
-            />
-            <div className={styles.buttons}>
-              <button onClick={handleChangeTaskName}>
-                <BsFillCheckCircleFill />
-              </button>
-              <button onClick={handleCancelNameChange}>
-                <BsFillXCircleFill />
-              </button>
-            </div>
-          </div>
+          <TaskEditField name={name} listId={listId} taskId={taskId} />
         )}
       </label>
+			
       {editingTask === taskId ? (
         <button onClick={() => deleteTask({ listId, taskId })}>
           <BsFillTrash3Fill />

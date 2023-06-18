@@ -9,7 +9,6 @@ import { useActions } from "../hooks/useActions"
 import { useSelector } from "react-redux"
 import { RootStateType } from "../redux/store"
 
-
 const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
   const listStart = useSelector(
     (state: RootStateType) => state.DraggingState.listStart
@@ -43,19 +42,10 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
     }
   })
   const taskItems = filteredTasks.map((t) => (
-    <Task
-      key={t.id}
-      listId={id}
-      taskId={t.id}
-      name={t.name}
-      isDone={t.isDone}
-      listRef={listRef}
-    />
+    <Task key={t.id} listId={id} taskId={t.id} name={t.name} isDone={t.isDone} />
   ))
 
   function handleListDragStart() {
-		// listHeaderRef.current.style.cursor = 'grabbing'
-
     setListStart(id)
   }
   function handleListDragEnter() {
@@ -66,7 +56,6 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
   function handleListDragEnd() {
     setListStart(null)
   }
-
   function handleTaskDragEnter() {
     if (tasks.length === 0 && taskStartList && taskStart) {
       if (taskStartList !== id) {
@@ -88,8 +77,8 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
         onDragStart={handleListDragStart}
         onDragEnter={handleListDragEnter}
         onDragEnd={handleListDragEnd}
-				ref={listHeaderRef}
-				style={{cursor: 'grab'}}
+        ref={listHeaderRef}
+        style={{ cursor: "grab" }}
       >
         <ListHeader
           id={id}
