@@ -257,8 +257,15 @@ export const ToDoLists = createSlice({
         const listIndex = state.lists.indexOf(list)
         const destinationListIndex =
           action.payload.destination === "up" ? listIndex - 1 : listIndex + 1
-				state.lists[listIndex] = state.lists[destinationListIndex]
-				state.lists[destinationListIndex] = list
+        if (
+          listIndex !== 0 &&
+          action.payload.destination !== "up" &&
+          listIndex !== state.lists.length &&
+          action.payload.destination !== "down"
+        ) {
+          state.lists[listIndex] = state.lists[destinationListIndex]
+          state.lists[destinationListIndex] = list
+        }
       }
     },
     moveTaskMobile(
@@ -275,8 +282,15 @@ export const ToDoLists = createSlice({
         const taskIndex = list.tasks.indexOf(task)
         const destinationTaskIndex =
           action.payload.destination === "up" ? taskIndex - 1 : taskIndex + 1
-        list.tasks[taskIndex] = list.tasks[destinationTaskIndex]
-        list.tasks[destinationTaskIndex] = task
+        if (
+          taskIndex !== 0 &&
+          action.payload.destination !== "up" &&
+          taskIndex !== list.tasks.length &&
+          action.payload.destination !== "down"
+        ) {
+          list.tasks[taskIndex] = list.tasks[destinationTaskIndex]
+          list.tasks[destinationTaskIndex] = task
+        }
       }
     },
   },

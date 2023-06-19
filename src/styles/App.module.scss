@@ -17,6 +17,7 @@
 }
 
 .toDos {
+	width: 100%;
 	gap: 1.5em;
 	align-items: flex-start;	
 
@@ -26,6 +27,30 @@
 	&.grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr 1fr;
+	}
+}
+
+@media (max-width: 1550px) {
+	.toDos {
+		&.grid {
+			grid-template-columns: 1fr 1fr 1fr;
+		}
+	}
+}
+@media (max-width: 1180px) {
+	.toDos {
+		&.grid {
+			grid-template-columns: 1fr 1fr;
+			gap: clamp(2rem, -2.211rem + 8.42vw, 4rem)
+		}
+	}
+}
+@media (max-width: 800px) {
+	.toDos {
+		&.grid {
+			grid-template-columns: clamp(22.5rem, 8.929rem + 57.14vw, 37.5rem);
+			justify-content: center;
+		}
 	}
 }
 
