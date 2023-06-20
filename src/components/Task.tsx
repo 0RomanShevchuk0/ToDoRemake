@@ -4,9 +4,10 @@ import { useActions } from "../hooks/useActions"
 import { RootStateType } from "../redux/store"
 import styles from "../styles/Task.module.scss"
 import { ITask } from "../types/ToDoListTypes"
-import { BsFillTrash3Fill } from "react-icons/bs"
-import { MdModeEdit } from "react-icons/md"
 import TaskEditField from "./TaskEditField"
+import { MdModeEdit } from "react-icons/md"
+import { BsFillTrash3Fill } from "react-icons/bs"
+import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io"
 
 interface TaskPropsType extends Omit<ITask, "id"> {
   listId: string
@@ -23,6 +24,9 @@ const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
   const editingTask = useSelector(
     (state: RootStateType) => state.EditingElements.editingTask
   )
+  const isMobileMovingMode = useSelector(
+    (state: RootStateType) => state.DraggingState.isMobileMovingMode
+  )
 
   const {
     toggleIsDone,
@@ -31,6 +35,7 @@ const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
     setTaskStartList,
     setTaskStart,
     setEditingTask,
+    moveTaskMobile,
   } = useActions()
 
   function handleTaskDragStart() {
@@ -77,15 +82,32 @@ const Task: FC<TaskPropsType> = ({ listId, taskId, name, isDone }) => {
           <TaskEditField name={name} listId={listId} taskId={taskId} />
         )}
       </label>
-			
-      {editingTask === taskId ? (
-        <button onClick={() => deleteTask({ listId, taskId })}>
-          <BsFillTrash3Fill />
-        </button>
+
+      {!isMobileMovingMode ? (
+        <>
+          {editingTask === taskId ? (
+            <button onClick={() => deleteTask({ listId, taskId })}>
+              <BsFillTrash3Fill />
+            </button>
+          ) : (
+            <button onClick={() => setEditingTask(taskId)}>
+              <MdModeEdit />
+            </button>
+          )}
+        </>
       ) : (
-        <button onClick={() => setEditingTask(taskId)}>
-          <MdModeEdit />
-        </button>
+        <div>
+          <button
+            onClick={() => moveTaskMobile({ listId, taskId, destination: "up" })}
+          >
+            <IoIosArrowUp />
+          </button>
+          <button
+            onClick={() => moveTaskMobile({ listId, taskId, destination: "down" })}
+          >
+            <IoIosArrowDown />
+          </button>
+        </div>
       )}
     </div>
   )

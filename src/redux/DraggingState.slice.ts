@@ -4,12 +4,14 @@ type InitialStateType = {
   listStart: string | null
   taskStartList: string | null
   taskStart: string | null
+  isMobileMovingMode: boolean
 }
 
 const initialState: InitialStateType = {
   listStart: null,
-	taskStartList: null,
+  taskStartList: null,
   taskStart: null,
+  isMobileMovingMode: false,
 }
 
 export const DraggingState = createSlice({
@@ -25,9 +27,17 @@ export const DraggingState = createSlice({
     setTaskStart(state, action: PayloadAction<string | null>) {
       state.taskStart = action.payload
     },
+    setIsMobileMovingMode(state, action: PayloadAction<boolean>) {
+      state.isMobileMovingMode = action.payload
+    },
   },
 })
 
-export const { setListStart, setTaskStart } = DraggingState.actions
+export const {
+  setListStart,
+  setTaskStartList,
+  setTaskStart,
+  setIsMobileMovingMode,
+} = DraggingState.actions
 
 export default DraggingState.reducer
