@@ -258,11 +258,12 @@ export const ToDoLists = createSlice({
         const destinationListIndex =
           action.payload.destination === "up" ? listIndex - 1 : listIndex + 1
         if (
-          listIndex !== 0 &&
-          action.payload.destination !== "up" &&
-          listIndex !== state.lists.length &&
-          action.payload.destination !== "down"
+          (listIndex === 0 && action.payload.destination === "up") ||
+          (listIndex === state.lists.length - 1 &&
+            action.payload.destination === "down")
         ) {
+          return
+        } else {
           state.lists[listIndex] = state.lists[destinationListIndex]
           state.lists[destinationListIndex] = list
         }
@@ -283,11 +284,12 @@ export const ToDoLists = createSlice({
         const destinationTaskIndex =
           action.payload.destination === "up" ? taskIndex - 1 : taskIndex + 1
         if (
-          taskIndex !== 0 &&
-          action.payload.destination !== "up" &&
-          taskIndex !== list.tasks.length &&
-          action.payload.destination !== "down"
+          (taskIndex === 0 && action.payload.destination === "up") ||
+          (taskIndex === list.tasks.length - 1 &&
+            action.payload.destination === "down")
         ) {
+          return
+        } else {
           list.tasks[taskIndex] = list.tasks[destinationTaskIndex]
           list.tasks[destinationTaskIndex] = task
         }
