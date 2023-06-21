@@ -44,7 +44,6 @@ const TodoList: FC<IToDoList> = ({ id, tasks, name }) => {
   const taskItems = filteredTasks.map((t) => (
     <Task key={t.id} listId={id} taskId={t.id} name={t.name} isDone={t.isDone} />
   ))
-
   function handleListDragStart() {
     setListStart(id)
   }

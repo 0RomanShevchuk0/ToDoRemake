@@ -2,7 +2,6 @@
 
 .toDoList {
 	min-width: 360px;
-	// max-width: 500px;
 	position: relative;
 	flex-shrink: 0;
 	padding: 12px;
@@ -35,6 +34,14 @@
 						color: rgb(169, 166, 166);
 					}
 				}
+			}
+		}
+	}
+	@media (max-width: 1024px) {
+		.buttons {	
+			button {}
+			&:hover {
+				color: red;
 			}
 		}
 	}

@@ -14,7 +14,9 @@ const App: FC = () => {
     <TodoList key={l.id} id={l.id} tasks={l.tasks} name={l.name} />
   ))
 
-  const [isGrid, setIsGrid] = useState<boolean>(true)
+  const [isGrid, setIsGrid] = useState<boolean>(
+    localStorage.getItem("view") === "flex" ? false : true
+  )
 
   return (
     <div className={styles.app}>

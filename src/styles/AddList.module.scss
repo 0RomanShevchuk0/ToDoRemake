@@ -1,8 +1,8 @@
 @use "./variables" as v;
 
 .addList {
+	min-width: 360px;
 	cursor: pointer;
-	width: 23rem;
 	font-size: 1.4rem;
 	padding: 12px;
 	border-radius: 12px;
